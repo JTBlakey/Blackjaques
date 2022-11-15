@@ -14,7 +14,7 @@ namespace Blackjack2022;
 
 class Program
 {
-    public const string SETTINGS_FILE_LOCATION = "SETTINGS/settings.json";
+    public const string SETTINGS_FILE_LOCATION = "./SETTINGS/settings.json";
     public static string username;
 
     public class Settings
@@ -49,11 +49,6 @@ class Program
         }
     }
 
-    public static string GetCurrentDir()
-    {
-        return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-    }
-
     public static void SaveSettingsToFile(Settings settings, string file)
     {
         string data = SaveSettings(settings);
@@ -74,7 +69,7 @@ class Program
 
     public static void LoadSettingsFromFile(string file)
     {
-        string fileContents = string.Join("\n", System.IO.File.ReadAllLines(GetCurrentDir() + file));
+        string fileContents = string.Join("\n", System.IO.File.ReadAllLines(file));
 
         Settings settings = JsonSerializer.Deserialize<Settings>(fileContents);
 
@@ -120,13 +115,14 @@ class Program
         {
             Console.Clear();
 
-            Console.WriteLine("######   ###                    ###        ####                 ###   (c) 2022");
-            Console.WriteLine("##  ##   ##                     ##         ##                   ##");
-            Console.WriteLine("##  ##   ##     ####    ####    ##  ##     ##   ####    ####    ##  ##");
-            Console.WriteLine("#####    ##        ##  ##  ##   ## ##      ##      ##  ##  ##   ## ##");
-            Console.WriteLine("##  ##   ##     #####  ##       ####   ##  ##   #####  ##       ####");
-            Console.WriteLine("##  ##   ##    ##  ##  ##  ##   ## ##  ##  ##  ##  ##  ##  ##   ## ##");
-            Console.WriteLine("######   ####    ### ##  ####   ###  ##  ####    ### ##  ####   ###  ##");
+            Console.WriteLine();
+            Console.WriteLine("  ######   ###                    ###        ####                 ###   (c) 2022");
+            Console.WriteLine("  ##  ##   ##                     ##         ##                   ##");
+            Console.WriteLine("  ##  ##   ##     ####    ####    ##  ##     ##   ####    ####    ##  ##");
+            Console.WriteLine("  #####    ##        ##  ##  ##   ## ##      ##      ##  ##  ##   ## ##");
+            Console.WriteLine("  ##  ##   ##     #####  ##       ####   ##  ##   #####  ##       ####");
+            Console.WriteLine("  ##  ##   ##    ##  ##  ##  ##   ## ##  ##  ##  ##  ##  ##  ##   ## ##");
+            Console.WriteLine("  ######   ####    ### ##  ####   ###  ##  ####    ### ##  ####   ###  ##");
 
             Console.WriteLine("");
             Console.WriteLine("");
@@ -295,7 +291,12 @@ class Program
         Console.WriteLine("YOU:");
         OutputCardArray(player1.ToArray());
 
-        return new int[] { (Card.Score(player1.ToArray()) > Card.Score(player2.ToArray()) && Card.Score(player1.ToArray()) <= 21) ? 1 : 0, Card.Score(player1.ToArray()) , Card.Score(player2.ToArray()) };
+        int score = GetWinner(Card.Score(player1.ToArray()), Card.Score(player2.ToArray()));
+
+        if (score == 0) // draw = dealer win
+            score = 2;
+
+        return new int[] { score , Card.Score(player1.ToArray()) , Card.Score(player2.ToArray()) };
     }
 
     public static void OutputCardArray(Card[] chards)
@@ -330,6 +331,26 @@ class Program
             Console.WriteLine("Score: " + score.ToString());
             Console.ReadLine();
         }
+    }
+
+    public static int GetWinner(int score1, int score2) // 0 - noone, 1 - score1, 2 - score2
+    {
+        if (score1 > 21 && score2 > 21) // both over limit
+            return 0;
+
+        if (score1 > 21) // score1 over limit
+            return 2;
+
+        if (score2 > 21) // score2 over limit
+            return 1;
+
+        if (score1 == score2) // equal
+            return 0;
+
+        if (score1 > score2) // score1 LETSSS GOOO
+            return 1;
+        else
+            return 2;
     }
 
     public class Card
@@ -416,15 +437,15 @@ class Program
 
             for (int i = 0; i < chards.Length; i++)
             {
-                if (chards[i].num > 1) // not an ace
+                if (chards[i].num >= 1) // not an ace
                 {
-                    if (chards[i].num > 10) // not a symbol card (or 10)
+                    if (chards[i].num >= 10) // is a symbol card
                     {
                         score += 10;
                     }
                     else // die nerd
                     {
-                        score += chards[i].num;
+                        score += chards[i].num + 1;
                     }
                 }
                 else // ACE!
