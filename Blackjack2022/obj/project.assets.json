@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\jblake\\.nuget\\packages\\": {}
+    "C:\\Users\\bbarratt\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "N:\\Visual Studio 2022\\Blackjack2022\\Blackjack2022.csproj",
+      "projectUniqueName": "C:\\Users\\bbarratt\\Source\\Repos\\AUnicornWithNoLife\\Blackjacke\\Blackjack2022\\Blackjack2022.csproj",
       "projectName": "Blackjack2022",
-      "projectPath": "N:\\Visual Studio 2022\\Blackjack2022\\Blackjack2022.csproj",
-      "packagesPath": "C:\\Users\\jblake\\.nuget\\packages\\",
-      "outputPath": "N:\\Visual Studio 2022\\Blackjack2022\\obj\\",
+      "projectPath": "C:\\Users\\bbarratt\\Source\\Repos\\AUnicornWithNoLife\\Blackjacke\\Blackjack2022\\Blackjack2022.csproj",
+      "packagesPath": "C:\\Users\\bbarratt\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\bbarratt\\Source\\Repos\\AUnicornWithNoLife\\Blackjacke\\Blackjack2022\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\jblake\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\bbarratt\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
