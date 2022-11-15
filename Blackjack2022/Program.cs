@@ -229,7 +229,7 @@ class Program
     // THIS WAS MADE BY THE JAVA GANG LMAO (we think were so funny) 8==D
     // mfs the type to say ROFL out loud
     
-    public static bool Game()
+    public static int[] Game()
     {
         List<Card> deck = Card.Deck().ToList<Card>();
 
@@ -261,9 +261,11 @@ class Program
             OutputCardArray(new Card[] { player2.ToArray()[0] });
             Console.WriteLine("YOU:");
             OutputCardArray(player1.ToArray());
-            Console.WriteLine("HIT? ");
+            Console.WriteLine();
+            Console.Write("HIT? ");
 
             string playerIn = Console.ReadLine();
+            Console.WriteLine();
 
             if (playerIn.ToUpper() == "Y")
             {
@@ -289,16 +291,18 @@ class Program
         Console.WriteLine("YOU:");
         OutputCardArray(player1.ToArray());
 
-        return Card.Score(player1.ToArray()) > Card.Score(player2.ToArray());
+        return new int[] { (Card.Score(player1.ToArray()) > Card.Score(player2.ToArray()) && Card.Score(player1.ToArray()) <= 21) ? 1 : 0, Card.Score(player1.ToArray()) , Card.Score(player2.ToArray()) };
     }
 
     public static void OutputCardArray(Card[] chards)
     {
         string pout = "";
 
+        string[] chardID = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+
         foreach (Card chard in chards)
         {
-            pout += chard.GetSuiteChar() + chard.num.ToString() + " ";
+            pout += chard.GetSuiteChar() + chardID[chard.num] + " ";
         }
 
         Console.WriteLine(pout);
@@ -310,10 +314,15 @@ class Program
 
         while (true)
         {
-            bool gs = Game();
-            score += gs ? 1 : 0;
+            int[] gs = Game();
+            score += gs[0];
 
-            Console.WriteLine(gs ? "you won!" : "you lost :(");
+            Console.WriteLine();
+            Console.WriteLine(gs[0] == 1 ? "you won!" : "you lost :(");
+            Console.WriteLine();
+            Console.WriteLine("the dealers cards where worth: " + gs[2].ToString());
+            Console.WriteLine("your cards where worth: " + gs[1].ToString());
+            Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
             Console.ReadLine();
         }
