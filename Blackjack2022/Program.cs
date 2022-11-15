@@ -335,8 +335,8 @@ class Program
             Console.WriteLine();
             Console.WriteLine(gs[0] == 1 ? "you won!" : "you lost :(");
             Console.WriteLine();
-            Console.WriteLine("the dealers cards where worth: " + gs[2].ToString());
-            Console.WriteLine("your cards where worth: " + gs[1].ToString());
+            Console.WriteLine("the dealers cards were worth: " + gs[2].ToString());
+            Console.WriteLine("your cards were worth: " + gs[1].ToString());
             Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
             Console.ReadLine();
