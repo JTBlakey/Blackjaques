@@ -2,6 +2,7 @@
 // Copyright 2022
 // <3
 // <3
+// <3
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -455,7 +456,7 @@ class Program
                     }
                     else // die nerd
                     {
-                        score += chards[i].num + 1;
+                        score += chards[i].num + 1; // cards start at 0, but scoring has to be + 1, so ace (0) is 1
                     }
                 }
                 else // ACE!
