@@ -15,15 +15,16 @@ namespace Blackjack2022;
 class Program
 {
     public const string SETTINGS_FILE_LOCATION = "./SETTINGS/settings.json";
-    public static string username;
+
+    public static Settings settings;
 
     public class Settings
     {
 
-        public ConsoleColor foregroundColor;
-        public ConsoleColor backgroundColor;
+        public ConsoleColor foregroundColor { get; set; }
+        public ConsoleColor backgroundColor { get; set; }
 
-        public string name;
+        public string name { get; set; }
 
         public Settings()
         {
@@ -67,21 +68,21 @@ class Program
         return JsonSerializer.Serialize(settings);
     }
 
-    public static void LoadSettingsFromFile(string file)
+    public static Settings LoadSettingsFromFile(string file)
     {
         string fileContents = string.Join("\n", System.IO.File.ReadAllLines(file));
 
         Settings settings = JsonSerializer.Deserialize<Settings>(fileContents);
 
         LoadSettings(settings);
+
+        return settings;
     }
 
     public static void LoadSettings(Settings settings)
     {
         Console.BackgroundColor = settings.backgroundColor;
         Console.ForegroundColor = settings.foregroundColor;
-
-        username = settings.name;
     }
 
     //Main program
@@ -89,16 +90,21 @@ class Program
     {
         Console.OutputEncoding = Encoding.UTF8; // allow emojis
 
-        /*try
+        try
         {
-            LoadSettingsFromFile(SETTINGS_FILE_LOCATION);
+            settings = LoadSettingsFromFile(SETTINGS_FILE_LOCATION);
         }
         catch
         {
-            Settings settings = new Settings();
+            if (!Directory.Exists("./SETTINGS"))
+            {
+                Directory.CreateDirectory("./SETTINGS");
+            }
+            
+            settings = new Settings();
             SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
             LoadSettings(settings);
-        }*/
+        }
 
         bool doMenu = false;
 
@@ -193,10 +199,14 @@ class Program
 
     static void Options()
     {
-        Console.WriteLine("Choice is merely an illusion.");
+        /*Console.WriteLine("Choice is merely an illusion.");
         Console.WriteLine("However in our upcoming 49$ expansion pack, you can purchase free will");
         Console.WriteLine("Please enter your credit card details below to prepurchase for the LOW LOW price of $38.99*");
-        Console.WriteLine("* not including the $69.99 prepurchase fee :)");
+        Console.WriteLine("* not including the $69.99 prepurchase fee :)");*/ // i know, its sad to see this go
+
+        Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
+        Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
+        Console.WriteLine("3: Username:         " + settings.name);
 
         Console.WriteLine();
         Console.WriteLine("Enter M to return to menu.");
