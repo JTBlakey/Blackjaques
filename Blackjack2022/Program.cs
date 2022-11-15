@@ -199,6 +199,7 @@ class Program
         Console.WriteLine("Please enter your credit card details below to prepurchase for the LOW LOW price of $38.99*");
         Console.WriteLine("* not including the $69.99 prepurchase fee :)");
 
+        Console.WriteLine();
         Console.WriteLine("Enter M to return to menu.");
 
         while (true)
@@ -384,7 +385,7 @@ class Program
 
             for (int suite = 0; suite < 4; suite++)
             {
-                for (int num = 0; num < 13; num++)
+                for (int num = 1; num <= 13; num++)
                 {
                     deck[i++] = new Card(suite, num);
                 }
