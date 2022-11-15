@@ -310,10 +310,12 @@ class Program
 
         while (true)
         {
-            score += Game() ? 1 : 0;
+            bool gs = Game();
+            score += gs ? 1 : 0;
 
-            Console.WriteLine(score);
-            Console.ReadKey();
+            Console.WriteLine(gs ? "you won!" : "you lost :(");
+            Console.WriteLine("Score: " + score.ToString());
+            Console.ReadLine();
         }
     }
 
