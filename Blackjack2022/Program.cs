@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Reflection;
 using System.IO;
 using System;
+using System.Text;
 
 namespace Blackjack2022;
 
@@ -91,6 +92,8 @@ class Program
     //Main program
     static void Main(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8; // allow emojis
+
         /*try
         {
             LoadSettingsFromFile(SETTINGS_FILE_LOCATION);
@@ -253,7 +256,7 @@ class Program
 
         bool stop = false;
 
-        while (!stop && Card.Score(player1.ToArray()) <= 21) // loverly logic
+        do
         {
             Console.Clear();
 
@@ -277,6 +280,7 @@ class Program
                 stop = true;
             }
         }
+        while (!stop && Card.Score(player1.ToArray()) <= 21); // loverly logic
 
         Console.Clear();
 
@@ -396,7 +400,7 @@ class Program
 
             for (int suite = 0; suite < 4; suite++)
             {
-                for (int num = 1; num <= 13; num++)
+                for (int num = 0; num < 13; num++)
                 {
                     deck[i++] = new Card(suite, num);
                 }
