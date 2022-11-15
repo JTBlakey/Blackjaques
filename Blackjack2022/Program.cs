@@ -30,7 +30,7 @@ class Program
             name = "Username";
 
             foregroundColor = ConsoleColor.White;
-            backgroundColor = ConsoleColor.Blue;
+            backgroundColor = ConsoleColor.Black;
         }
 
         public Settings(string sName, ConsoleColor foreground, ConsoleColor background)
