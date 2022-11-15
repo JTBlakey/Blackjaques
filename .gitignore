@@ -1,9 +1,7 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/.vs
+﻿/.vs
 /Blackjack2022/.vs/Blackjack2022/FileContentIndex
 /Blackjack2022/obj/Release/net6.0
 /Blackjack2022/obj/Debug/net6.0
 /Blackjack2022/.vs/Blackjack2022/DesignTimeBuild
+*.v2
+/Blackjack2022/.vs/ProjectEvaluation
