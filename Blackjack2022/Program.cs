@@ -1,6 +1,7 @@
 ﻿// A game of BlackJack made in PURE unadulterated C#, made solely by Joel and BElijahmin <33333
 // Copyright 2022
 // <3
+// <3
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
