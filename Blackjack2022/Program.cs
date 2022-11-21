@@ -204,19 +204,75 @@ class Program
         Console.WriteLine("Please enter your credit card details below to prepurchase for the LOW LOW price of $38.99*");
         Console.WriteLine("* not including the $69.99 prepurchase fee :)");*/ // i know, its sad to see this go
 
-        Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
-        Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
-        Console.WriteLine("3: Username:         " + settings.name);
-
-        Console.WriteLine();
-        Console.WriteLine("Enter M to return to menu.");
-
         while (true)
         {
+            LoadSettings(settings);
+
+            Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
+            Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
+            Console.WriteLine("3: Username:         " + settings.name);
+
+            Console.WriteLine();
+            Console.WriteLine("Enter M to return to menu.");
+
             ConsoleKeyInfo mForMenu = Console.ReadKey();
 
             if (mForMenu.Key == ConsoleKey.M)
+            {
+                SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
+
                 return;
+            }
+
+            if (mForMenu.Key == ConsoleKey.D1)
+                settings.backgroundColor = SelectConsoleColor(settings.backgroundColor);
+
+            if (mForMenu.Key == ConsoleKey.D2)
+                settings.foregroundColor = SelectConsoleColor(settings.foregroundColor);
+        }
+    }
+
+    static ConsoleColor SelectConsoleColor(ConsoleColor original = ConsoleColor.Black)
+    {
+        ConsoleColor[] allColors = (ConsoleColor[])ConsoleColor.GetValues(typeof(ConsoleColor));
+
+        int selected = 0;
+
+        while (true)
+        {
+            if (allColors[selected] == ConsoleColor.Black)
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+
+
+            Console.ForegroundColor = allColors[selected];
+
+            Console.Clear();
+
+            Console.WriteLine(allColors[selected].ToString());
+
+            ConsoleKey inputKey = Console.ReadKey().Key;
+
+            if (inputKey == ConsoleKey.Enter)
+                return allColors[selected];
+
+            if (inputKey == ConsoleKey.LeftArrow)
+                selected--;
+
+            if (inputKey == ConsoleKey.RightArrow)
+                selected++;
+
+
+            if (selected < 0)
+                selected = allColors.Length - 1;
+
+            if (selected >= allColors.Length)
+                selected = 0;
         }
     }
 
@@ -227,7 +283,7 @@ class Program
     // <3
     // yes we do now get back to work, no toilet breaks
     // ifg (wot dis mene) you need to go, please use the bottle
-    
+
 
     // TOP TEXT
 
@@ -238,7 +294,7 @@ class Program
     // THIS WAS MADE BY THE JAVA GANG LMAO (we think were so funny) 8==D
     // mfs the type to say ROFL out loud
     // mfs write comments instead of coding lmao
-    
+
     public static int[] Game()
     {
         List<Card> deck = Card.Deck().ToList<Card>();
