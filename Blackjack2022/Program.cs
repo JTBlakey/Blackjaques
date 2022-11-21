@@ -3,11 +3,6 @@
 // <3
 // <3
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Reflection;
-using System.IO;
-using System;
 using System.Text;
 
 namespace Blackjack2022;
@@ -18,7 +13,7 @@ class Program
 
     public static Settings settings;
 
-    
+
 
     //Main program
     static void Main(string[] args)
@@ -35,7 +30,7 @@ class Program
             {
                 Directory.CreateDirectory("./SETTINGS");
             }
-            
+
             settings = new Settings();
             Settings.SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
             Settings.LoadSettings(settings);
@@ -86,7 +81,7 @@ class Program
                 iChoice = Convert.ToInt16(choice);
                 doIt = true;
             }
-            catch {}
+            catch { }
 
             if (doIt)
             {
@@ -178,7 +173,7 @@ class Program
 
         int selected = -1;
 
-        foreach(ConsoleColor someColors in allColors)
+        foreach (ConsoleColor someColors in allColors)
         {
             selected++;
 
@@ -331,7 +326,7 @@ class Program
         if (score == 0) // draw = dealer win
             score = 2;
 
-        return new int[] { score , Card.Score(player1.ToArray()) , Card.Score(player2.ToArray()) };
+        return new int[] { score, Card.Score(player1.ToArray()), Card.Score(player2.ToArray()) };
     }
 
     public static void OutputCardArray(Card[] chards, uint show = 0)
@@ -375,9 +370,9 @@ class Program
             Console.WriteLine("your cards where worth: " + gs[1].ToString());
             Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
-            
+
             Console.WriteLine("press enter to play again or press escape to go back to the menu");
-            
+
             ConsoleKey boop = Console.ReadKey().Key;
 
             if (boop == ConsoleKey.Escape)
