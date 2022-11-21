@@ -82,7 +82,9 @@ namespace Blackjack2022
 
             Console.Clear();
 
-            while (Card.Score(player2.ToArray()) <= 21 && (Card.Score(player1.ToArray()) >= 21 || Card.Score(player1.ToArray()) < Card.Score(player2.ToArray()))) // even better logic
+            // player1 <= 21, player2 <= player1
+
+            while (Card.Score(player1.ToArray()) <= 21 && (Card.Score(player2.ToArray()) <= Card.Score(player1.ToArray()))) // even better logic
             {
                 player2.Add(deck[0]);
                 deck.RemoveAt(0);
