@@ -233,10 +233,12 @@ class Program
     // FUNNY IMAGE
 
     // BOTTOM TEXT
+
     // This post was made by Javascript gang
     // THIS WAS MADE BY THE JAVA GANG LMAO (we think were so funny) 8==D
     // mfs the type to say ROFL out loud
     // mfs write comments instead of coding lmao
+    // mfs who say LMAO out loud "luh-maohw"
 
     public static int[] Game()
     {
