@@ -114,7 +114,7 @@ class Program
         }
 
         Console.WriteLine("GoodBye!");
-        Console.WriteLine("See you soon! (we hope you spend even more money next time)")
+        Console.WriteLine("See you soon! (we hope you spend even more money next time)");
     }
 
     //Menu
