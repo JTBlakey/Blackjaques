@@ -372,7 +372,7 @@ class Program
             Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
             
-            Console.WriteLine("press enter to prlay again");
+            Console.WriteLine("press enter to play again or press escape to go back to the menu");
             
             ConsoleKey boop = Console.ReadKey().Key;
 
