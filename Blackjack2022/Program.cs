@@ -265,6 +265,8 @@ class Program
 
         do
         {
+            bool canBurn = (player1.Count == 2) && (Card.Score(player1.ToArray()) == 13 || Card.Score(player1.ToArray()) == 14);
+
             Console.Clear();
 
             Console.WriteLine("COM:");
@@ -272,6 +274,14 @@ class Program
             Console.WriteLine("YOU:");
             OutputCardArray(player1.ToArray());
             Console.WriteLine();
+
+            if (canBurn)
+            {
+                Console.WriteLine("You can also press [B] to burn");
+                Console.WriteLine();
+            }
+
+
             Console.Write("HIT? ");
 
             string playerIn = Console.ReadLine();
@@ -285,6 +295,16 @@ class Program
             else if (playerIn.ToUpper() == "N")
             {
                 stop = true;
+            }
+            else if ((playerIn.ToUpper() == "B") && canBurn)
+            {
+                player1.Clear();
+
+                player1.Add(deck[0]);
+                deck.RemoveAt(0);
+
+                player1.Add(deck[0]);
+                deck.RemoveAt(0);
             }
         }
         while (!stop && (Card.Score(player1.ToArray()) <= 21)); // loverly logic (much better than it was)
