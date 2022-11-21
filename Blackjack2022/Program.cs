@@ -371,7 +371,11 @@ class Program
             Console.WriteLine("your cards where worth: " + gs[1].ToString());
             Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
-            Console.ReadLine();
+            
+            ConsoleKey boop = Console.ReadKey().Key;
+
+            if (boop == ConsoleKey.Escape)
+                return;
         }
     }
 
