@@ -372,6 +372,8 @@ class Program
             Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
             
+            Console.WriteLine("press enter to prlay again");
+            
             ConsoleKey boop = Console.ReadKey().Key;
 
             if (boop == ConsoleKey.Escape)
