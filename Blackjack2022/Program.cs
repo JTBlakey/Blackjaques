@@ -311,7 +311,7 @@ class Program
 
         Console.Clear();
 
-        while (Card.Score(player2.ToArray()) <= 21 && (Card.Score(player1.ToArray()) > 21 || Card.Score(player1.ToArray()) < Card.Score(player2.ToArray()))) // even better logic
+        while (Card.Score(player2.ToArray()) <= 21 && (Card.Score(player1.ToArray()) >= 21 || Card.Score(player1.ToArray()) < Card.Score(player2.ToArray()))) // even better logic
         {
             player2.Add(deck[0]);
             deck.RemoveAt(0);
