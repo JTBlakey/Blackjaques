@@ -311,7 +311,7 @@ class Program
 
         Console.Clear();
 
-        while (Card.Score(player2.ToArray()) <= 21 && (Card.Score(player1.ToArray()) > 21 || Card.Score(player1.ToArray()) < Card.Score(player2.ToArray()))) // even better logic
+        while (Card.Score(player2.ToArray()) <= 21 && (Card.Score(player1.ToArray()) >= 21 || Card.Score(player1.ToArray()) < Card.Score(player2.ToArray()))) // even better logic
         {
             player2.Add(deck[0]);
             deck.RemoveAt(0);
@@ -371,8 +371,13 @@ class Program
             Console.WriteLine("your cards where worth: " + gs[1].ToString());
             Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
-            Console.WriteLine("press enter to prlay again");
-            Console.ReadLine();
+            
+            Console.WriteLine("press enter to play again or press escape to go back to the menu");
+            
+            ConsoleKey boop = Console.ReadKey().Key;
+
+            if (boop == ConsoleKey.Escape)
+                return;
         }
     }
 
