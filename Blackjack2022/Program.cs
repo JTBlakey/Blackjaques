@@ -18,72 +18,7 @@ class Program
 
     public static Settings settings;
 
-    public class Settings
-    {
-
-        public ConsoleColor foregroundColor { get; set; }
-        public ConsoleColor backgroundColor { get; set; }
-
-        public string name { get; set; }
-
-        public Settings()
-        {
-            name = "Username";
-
-            foregroundColor = ConsoleColor.White;
-            backgroundColor = ConsoleColor.Black;
-        }
-
-        public Settings(string sName, ConsoleColor foreground, ConsoleColor background)
-        {
-            name = sName;
-            foregroundColor = foreground;
-            backgroundColor = background;
-        }
-
-        public void SwapColors()
-        {
-            ConsoleColor temp = foregroundColor;
-
-            foregroundColor = backgroundColor;
-            backgroundColor = temp;
-        }
-    }
-
-    public static void SaveSettingsToFile(Settings settings, string file)
-    {
-        string data = SaveSettings(settings);
-
-        if (data == null)
-            throw new InsufficientExecutionStackException("BOOP!");
-
-        using (StreamWriter sw = new StreamWriter(file))
-        {
-            sw.WriteLine(data);
-        }
-    }
-
-    public static string SaveSettings(Settings settings)
-    {
-        return JsonSerializer.Serialize(settings);
-    }
-
-    public static Settings LoadSettingsFromFile(string file)
-    {
-        string fileContents = string.Join("\n", System.IO.File.ReadAllLines(file));
-
-        Settings settings = JsonSerializer.Deserialize<Settings>(fileContents);
-
-        LoadSettings(settings);
-
-        return settings;
-    }
-
-    public static void LoadSettings(Settings settings)
-    {
-        Console.BackgroundColor = settings.backgroundColor;
-        Console.ForegroundColor = settings.foregroundColor;
-    }
+    
 
     //Main program
     static void Main(string[] args)
@@ -92,7 +27,7 @@ class Program
 
         try
         {
-            settings = LoadSettingsFromFile(SETTINGS_FILE_LOCATION);
+            settings = Settings.LoadSettingsFromFile(SETTINGS_FILE_LOCATION);
         }
         catch
         {
@@ -102,8 +37,8 @@ class Program
             }
             
             settings = new Settings();
-            SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
-            LoadSettings(settings);
+            Settings.SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
+            Settings.LoadSettings(settings);
         }
 
         bool doMenu = false;
@@ -209,7 +144,7 @@ class Program
 
         while (true)
         {
-            LoadSettings(settings);
+            Settings.LoadSettings(settings);
 
             Console.Clear();
 
@@ -224,7 +159,7 @@ class Program
 
             if (mForMenu.Key == ConsoleKey.M)
             {
-                SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
+                Settings.SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
 
                 return;
             }
