@@ -112,6 +112,9 @@ class Program
         {
             doMenu = Menu();
         }
+
+        Console.WriteLine("GoodBye!");
+        Console.WriteLine("See you soon! (we hope you spend even more money next time)")
     }
 
     //Menu
@@ -208,6 +211,8 @@ class Program
         {
             LoadSettings(settings);
 
+            Console.Clear();
+
             Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
             Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
             Console.WriteLine("3: Username:         " + settings.name);
@@ -236,7 +241,15 @@ class Program
     {
         ConsoleColor[] allColors = (ConsoleColor[])ConsoleColor.GetValues(typeof(ConsoleColor));
 
-        int selected = 0;
+        int selected = -1;
+
+        foreach(ConsoleColor someColors in allColors)
+        {
+            selected++;
+
+            if (someColors == original)
+                break;
+        }
 
         while (true)
         {
