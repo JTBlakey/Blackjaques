@@ -13,8 +13,8 @@ namespace Blackjack2022
         {
             name = "Username";
 
-            foregroundColor = ConsoleColor.White;
-            backgroundColor = ConsoleColor.Black;
+            foregroundColor = Console.ForegroundColor;
+            backgroundColor = Console.BackgroundColor;
         }
 
         public Settings(string sName, ConsoleColor foreground, ConsoleColor background)
