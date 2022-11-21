@@ -4,7 +4,6 @@ namespace Blackjack2022
 {
     public class Settings
     {
-
         public ConsoleColor foregroundColor { get; set; }
         public ConsoleColor backgroundColor { get; set; }
 
