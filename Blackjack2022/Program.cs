@@ -237,6 +237,7 @@ class Program
     // This post was made by Javascript gang
     // THIS WAS MADE BY THE JAVA GANG LMAO (we think were so funny) 8==D
     // mfs the type to say ROFL out loud
+    // mfs write comments instead of coding lmao
     
     public static int[] Game()
     {
@@ -267,7 +268,7 @@ class Program
             Console.Clear();
 
             Console.WriteLine("COM:");
-            OutputCardArray(new Card[] { player2.ToArray()[0] });
+            OutputCardArray(player2.ToArray(), 1);
             Console.WriteLine("YOU:");
             OutputCardArray(player1.ToArray());
             Console.WriteLine();
@@ -286,7 +287,7 @@ class Program
                 stop = true;
             }
         }
-        while (!stop && Card.Score(player1.ToArray()) <= 21); // loverly logic
+        while (!stop && (Card.Score(player1.ToArray()) <= 21)); // loverly logic (much better than it was)
 
         Console.Clear();
 
@@ -309,15 +310,26 @@ class Program
         return new int[] { score , Card.Score(player1.ToArray()) , Card.Score(player2.ToArray()) };
     }
 
-    public static void OutputCardArray(Card[] chards)
+    public static void OutputCardArray(Card[] chards, uint show = 0)
     {
         string pout = "";
 
         string[] chardID = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
+        int i = 1;
+
         foreach (Card chard in chards)
         {
-            pout += chard.GetSuiteChar() + chardID[chard.num] + " ";
+            if (i > show && show > 0)
+            {
+                pout += chard.GetSuiteChar() + "? ";
+            }
+            else
+            {
+                pout += chard.GetSuiteChar() + chardID[chard.num] + " ";
+            }
+
+            i++;
         }
 
         Console.WriteLine(pout);
