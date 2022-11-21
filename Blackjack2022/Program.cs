@@ -371,6 +371,7 @@ class Program
             Console.WriteLine("your cards where worth: " + gs[1].ToString());
             Console.WriteLine();
             Console.WriteLine("Score: " + score.ToString());
+            Console.WriteLine("press enter to prlay again");
             Console.ReadLine();
         }
     }
