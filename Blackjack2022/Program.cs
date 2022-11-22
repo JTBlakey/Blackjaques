@@ -67,6 +67,10 @@ class Program
             Console.WriteLine("  ##  ##   ##    ##  ##  ##  ##   ## ##  ##  ##  ##  ##  ##  ##   ## ##");
             Console.WriteLine("  ######   ####    ### ##  ####   ###  ##  ####    ### ##  ####   ###  ##");
 
+            #if DEBUG
+            Console.WriteLine("DEBUG");
+            #endif
+
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("[1. Play    ]");
