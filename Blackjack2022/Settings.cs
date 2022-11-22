@@ -39,7 +39,7 @@ namespace Blackjack2022
             if (data == null)
                 throw new InsufficientExecutionStackException("BOOP!");
 
-            using (StreamWriter sw = new StreamWriter(file))
+            using (StreamWriter sw = new StreamWriter(FileLib.GetFullAddress(file)))
             {
                 sw.WriteLine(data);
             }
@@ -52,7 +52,7 @@ namespace Blackjack2022
 
         public static Settings LoadSettingsFromFile(string file)
         {
-            string fileContents = string.Join("\n", System.IO.File.ReadAllLines(file));
+            string fileContents = string.Join("\n", System.IO.File.ReadAllLines(FileLib.GetFullAddress(file)));
 
             Settings settings = JsonSerializer.Deserialize<Settings>(fileContents);
 

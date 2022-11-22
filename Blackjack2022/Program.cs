@@ -9,11 +9,8 @@ namespace Blackjack2022;
 
 class Program
 {
-    public const string SETTINGS_FILE_LOCATION = "./SETTINGS/settings.json";
 
     public static Settings settings;
-
-
 
     //Main program
     static void Main(string[] args)
@@ -22,18 +19,25 @@ class Program
 
         try
         {
-            settings = Settings.LoadSettingsFromFile(SETTINGS_FILE_LOCATION);
+            try
+            {
+                settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
+            }
+            catch
+            {
+                if (!Directory.Exists("./SETTINGS"))
+                {
+                    Directory.CreateDirectory("./SETTINGS");
+                }
+
+                settings = new Settings();
+                Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+                Settings.LoadSettings(settings);
+            }
         }
         catch
         {
-            if (!Directory.Exists("./SETTINGS"))
-            {
-                Directory.CreateDirectory("./SETTINGS");
-            }
-
-            settings = new Settings();
-            Settings.SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
-            Settings.LoadSettings(settings);
+            throw new FileLoadException("BlackJack cannot read/write files in its directory, please make sure it is in a directory it has the ability to edit");
         }
 
         bool doMenu = false;
@@ -108,9 +112,7 @@ class Program
     //Subroutine to output options
     static void Rules()
     {
-        string ruleLoc = "./Ass/Rules.txt";
-
-        using (StreamReader sr = new StreamReader(ruleLoc))
+        using (StreamReader sr = new StreamReader(FileLib.GetFullAddress(FileLib.RULES_FILE_LOCATION)))
         {
             while (sr.Peek() >= 0)
             {
@@ -154,7 +156,7 @@ class Program
 
             if (mForMenu.Key == ConsoleKey.M)
             {
-                Settings.SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
+                Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
 
                 return;
             }
