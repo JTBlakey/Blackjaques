@@ -45,7 +45,7 @@ class Program
 
         while (!doMenu)
         {
-            doMenu = Menu();
+            doMenu = MainMenu();
         }
 
         Console.WriteLine("GoodBye!");
@@ -53,7 +53,7 @@ class Program
     }
 
     //Menu
-    static bool Menu() // i <3 bj
+    static bool MainMenu() // i <3 bj
     {
         while (true)
         {
@@ -74,42 +74,30 @@ class Program
 
             Console.WriteLine("");
             Console.WriteLine("");
-            Console.WriteLine("[1. Play    ]");
-            Console.WriteLine("[2. Rules   ]");
-            Console.WriteLine("[3. Options ]");
-            Console.WriteLine("[4. Exit    ]");
-            Console.WriteLine("");
-            Console.WriteLine("Enter an option number: ");
-
-            string? choice = Console.ReadLine();
-            int iChoice = 0;
-            bool doIt = false;
-
-            try
+            
+            int iChoice = Menu.NumberMenu(new string[]
             {
-                iChoice = Convert.ToInt16(choice);
-                doIt = true;
-            }
-            catch { }
+                "Play",
+                "Rules",
+                "Options",
+                "Exit"
+            });
 
-            if (doIt)
+            switch (iChoice)
             {
-                switch (Convert.ToInt16(iChoice))
-                {
-                    case 1:
-                        BJGame.BJTime();
-                        break;
-                    case 2:
-                        Rules();
-                        break;
-                    case 3:
-                        Options();
-                        break;
-                    case 4:
-                        return true;
-                    default:
-                        break;
-                }
+                case 1:
+                    BJGame.BJTime();
+                    break;
+                case 2:
+                    Rules();
+                    break;
+                case 3:
+                    Options();
+                    break;
+                case 4:
+                    return true;
+                default:
+                    break;
             }
         }
     }
@@ -150,33 +138,31 @@ class Program
 
             Console.Clear();
 
-            Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
-            Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
-            Console.WriteLine("3: Username:         " + settings.name);
-            Console.WriteLine("4: Reset All");
+            int option = Menu.NumberMenu(new string[]
+            {
+                "Background color: " + settings.backgroundColor.ToString(),
+                "Foreground color: " + settings.foregroundColor.ToString(),
+                "Username:         " + settings.name,
+                "Reset All"
+            }, "", ConsoleKey.M);
 
-            Console.WriteLine();
-            Console.WriteLine("Enter M to return to menu.");
-
-            ConsoleKeyInfo mForMenu = Console.ReadKey();
-
-            if (mForMenu.Key == ConsoleKey.M)
+            if (option == -1)
             {
                 Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
 
                 return;
             }
 
-            if (mForMenu.Key == ConsoleKey.D1)
+            if (option == 1)
                 settings.backgroundColor = SelectConsoleColor(settings.backgroundColor);
 
-            if (mForMenu.Key == ConsoleKey.D2)
+            if (option == 2)
                 settings.foregroundColor = SelectConsoleColor(settings.foregroundColor);
 
-            if (mForMenu.Key == ConsoleKey.D3)
+            if (option == 3)
                 Console.WriteLine("FEATURE NOT ADDED YET");
 
-            if (mForMenu.Key == ConsoleKey.D4)
+            if (option == 4)
                 settings = new Settings();
         }
     }
