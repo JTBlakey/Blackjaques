@@ -1,11 +1,5 @@
 ﻿// DO NOT TOUCH THIS FILE
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Blackjack2022
 {
     public class BJGame
