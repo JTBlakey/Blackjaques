@@ -177,7 +177,7 @@ class Program
                 Console.WriteLine("FEATURE NOT ADDED YET");
 
             if (mForMenu.Key == ConsoleKey.D4)
-                settings = new Settings(false);
+                settings = new Settings();
         }
     }
 
