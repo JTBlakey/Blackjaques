@@ -83,8 +83,6 @@ class Program
                 "Exit"
             });
 
-            bool doIt = false;
-
             switch (iChoice)
             {
                 case 1:
