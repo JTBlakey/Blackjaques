@@ -45,7 +45,7 @@ class Program
 
         while (!doMenu)
         {
-            doMenu = Menu();
+            doMenu = MainMenu();
         }
 
         Console.WriteLine("GoodBye!");
@@ -53,7 +53,7 @@ class Program
     }
 
     //Menu
-    static bool Menu() // i <3 bj
+    static bool MainMenu() // i <3 bj
     {
         while (true)
         {
@@ -74,42 +74,32 @@ class Program
 
             Console.WriteLine("");
             Console.WriteLine("");
-            Console.WriteLine("[1. Play    ]");
-            Console.WriteLine("[2. Rules   ]");
-            Console.WriteLine("[3. Options ]");
-            Console.WriteLine("[4. Exit    ]");
-            Console.WriteLine("");
-            Console.WriteLine("Enter an option number: ");
+            
+            int iChoice = Menu.NumberMenu(new string[]
+            {
+                "Play",
+                "Rules",
+                "Options",
+                "Exit"
+            });
 
-            string? choice = Console.ReadLine();
-            int iChoice = 0;
             bool doIt = false;
 
-            try
+            switch (iChoice)
             {
-                iChoice = Convert.ToInt16(choice);
-                doIt = true;
-            }
-            catch { }
-
-            if (doIt)
-            {
-                switch (Convert.ToInt16(iChoice))
-                {
-                    case 1:
-                        BJGame.BJTime();
-                        break;
-                    case 2:
-                        Rules();
-                        break;
-                    case 3:
-                        Options();
-                        break;
-                    case 4:
-                        return true;
-                    default:
-                        break;
-                }
+                case 1:
+                    BJGame.BJTime();
+                    break;
+                case 2:
+                    Rules();
+                    break;
+                case 3:
+                    Options();
+                    break;
+                case 4:
+                    return true;
+                default:
+                    break;
             }
         }
     }
