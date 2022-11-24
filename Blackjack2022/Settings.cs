@@ -63,7 +63,10 @@ namespace Blackjack2022
         {
             string fileContents = string.Join("\n", System.IO.File.ReadAllLines(FileLib.GetFullAddress(file)));
 
-            Settings settings = JsonSerializer.Deserialize<Settings>(fileContents);
+            Settings? settings = JsonSerializer.Deserialize<Settings>(fileContents);
+
+            if (settings == null)
+                throw new FileLoadException("Settings file loaded incorectly, please delete the file");
 
             LoadSettings(settings);
 

@@ -55,28 +55,31 @@ namespace Blackjack2022
 
                 Console.Write("HIT? ");
 
-                string playerIn = Console.ReadLine();
+                string? playerIn = Console.ReadLine();
                 Console.WriteLine();
 
-                if (playerIn.ToUpper() == "Y")
+                if (playerIn != null)
                 {
-                    player1.Add(deck[0]);
-                    deck.RemoveAt(0);
-                }
-                else if (playerIn.ToUpper() == "N")
-                {
-                    stop = true;
-                }
-                else if ((playerIn.ToUpper() == "B") && canBurn)
-                {
-                    player1.Clear();
+                    if (playerIn.ToUpper() == "Y")
+                    {
+                        player1.Add(deck[0]);
+                        deck.RemoveAt(0);
+                    }
+                    else if (playerIn.ToUpper() == "N")
+                    {
+                        stop = true;
+                    }
+                    else if ((playerIn.ToUpper() == "B") && canBurn)
+                    {
+                        player1.Clear();
 
-                    player1.Add(deck[0]);
-                    deck.RemoveAt(0);
+                        player1.Add(deck[0]);
+                        deck.RemoveAt(0);
 
-                    player1.Add(deck[0]);
-                    deck.RemoveAt(0);
-                }
+                        player1.Add(deck[0]);
+                        deck.RemoveAt(0);
+                    }
+                }                
             }
             while (!stop && (Card.Score(player1.ToArray()) <= 21)); // loverly logic (much better than it was)
 

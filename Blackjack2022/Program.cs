@@ -11,7 +11,7 @@ namespace Blackjack2022;
 class Program
 {
 
-    public static Settings settings;
+    public static Settings settings = new Settings();
 
     //Main program
     static void Main(string[] args)
@@ -81,7 +81,7 @@ class Program
             Console.WriteLine("");
             Console.WriteLine("Enter an option number: ");
 
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
             int iChoice = 0;
             bool doIt = false;
 
