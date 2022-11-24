@@ -31,4 +31,5 @@ jobs:
       working-directory: ./Blackjack2022
       run: dotnet build --no-restore
     - name: Test
+      working-directory: ./Blackjack Tests
       run: dotnet test --no-build --verbosity normal
