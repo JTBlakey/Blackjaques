@@ -138,33 +138,31 @@ class Program
 
             Console.Clear();
 
-            Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
-            Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
-            Console.WriteLine("3: Username:         " + settings.name);
-            Console.WriteLine("4: Reset All");
+            int option = Menu.NumberMenu(new string[]
+            {
+                "Background color: " + settings.backgroundColor.ToString(),
+                "Foreground color: " + settings.foregroundColor.ToString(),
+                "Username:         " + settings.name,
+                "Reset All"
+            }, "", ConsoleKey.M);
 
-            Console.WriteLine();
-            Console.WriteLine("Enter M to return to menu.");
-
-            ConsoleKeyInfo mForMenu = Console.ReadKey();
-
-            if (mForMenu.Key == ConsoleKey.M)
+            if (option == -1)
             {
                 Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
 
                 return;
             }
 
-            if (mForMenu.Key == ConsoleKey.D1)
+            if (option == 1)
                 settings.backgroundColor = SelectConsoleColor(settings.backgroundColor);
 
-            if (mForMenu.Key == ConsoleKey.D2)
+            if (option == 2)
                 settings.foregroundColor = SelectConsoleColor(settings.foregroundColor);
 
-            if (mForMenu.Key == ConsoleKey.D3)
+            if (option == 3)
                 Console.WriteLine("FEATURE NOT ADDED YET");
 
-            if (mForMenu.Key == ConsoleKey.D4)
+            if (option == 4)
                 settings = new Settings();
         }
     }
