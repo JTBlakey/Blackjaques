@@ -31,10 +31,17 @@ namespace Blackjack2022
 			{
 				int expanse = (width - menuItems[i - 1].Length) + 1;
 
-				Console.WriteLine("[" + i.ToString() + ":  " + menuItems[i - 1] + String.Concat(Enumerable.Repeat(" ", expanse)) + "]");
+				Console.WriteLine("[ " + i.ToString() + ":  " + menuItems[i - 1] + String.Concat(Enumerable.Repeat(" ", expanse)) + "]");
 			}
 
 			Console.WriteLine();
+
+			if (menuReturn != null)
+			{
+				Console.WriteLine("Press [" + menuReturn.ToString() + "] to go back");
+				Console.WriteLine();
+			}
+
 			Console.Write((inputPrompt == "") ? "Option: " : inputPrompt);
 
 			while (true)
