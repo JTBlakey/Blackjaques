@@ -19,9 +19,19 @@ namespace Blackjack2022
 
 		public static int NumberMenu(string[] menuItems, string inputPrompt = "", ConsoleKey? menuReturn = null)
 		{
+			int width = 0;
+
+			foreach (string menuItem in menuItems)
+			{
+				if (menuItem.Length > width)
+					width = menuItem.Length;
+			}
+
 			for (int i = 1; i <= menuItems.Length; i++)
 			{
-				Console.WriteLine("[" + i.ToString() + " " + menuItems[i - 1] + "]");
+				int expanse = (width - menuItems[i - 1].Length) + 1;
+
+				Console.WriteLine("[" + i.ToString() + ":  " + menuItems[i - 1] + String.Concat(Enumerable.Repeat(" ", expanse)) + "]");
 			}
 
 			Console.WriteLine();
