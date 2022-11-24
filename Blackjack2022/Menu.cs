@@ -33,7 +33,7 @@ namespace Blackjack2022
 
 				for (int i = 1; i <= menuItems.Length; i++)
 				{
-					if (input == inputKeys[i])
+					if (input == inputKeys[i - 1])
 						return i;
 				}
 			}
