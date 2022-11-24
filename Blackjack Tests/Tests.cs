@@ -3,7 +3,7 @@
 namespace Blackjack_Tests;
 
 [TestClass]
-public class UnitTest1
+public class Tests
 {
     [TestMethod]
     public void TestSettings()
