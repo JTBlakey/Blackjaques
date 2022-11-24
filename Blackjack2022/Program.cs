@@ -153,6 +153,7 @@ class Program
             Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
             Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
             Console.WriteLine("3: Username:         " + settings.name);
+            Console.WriteLine("4: Reset All");
 
             Console.WriteLine();
             Console.WriteLine("Enter M to return to menu.");
@@ -171,6 +172,12 @@ class Program
 
             if (mForMenu.Key == ConsoleKey.D2)
                 settings.foregroundColor = SelectConsoleColor(settings.foregroundColor);
+
+            if (mForMenu.Key == ConsoleKey.D3)
+                Console.WriteLine("FEATURE NOT ADDED YET");
+
+            if (mForMenu.Key == ConsoleKey.D4)
+                settings = new Settings(false);
         }
     }
 
