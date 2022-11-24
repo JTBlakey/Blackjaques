@@ -4,87 +4,14 @@
 // <3
 // <3
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Reflection;
-using System.IO;
-using System;
 using System.Text;
 
 namespace Blackjack2022;
 
 class Program
 {
-    public const string SETTINGS_FILE_LOCATION = "./SETTINGS/settings.json";
 
     public static Settings settings;
-
-    public class Settings
-    {
-
-        public ConsoleColor foregroundColor { get; set; }
-        public ConsoleColor backgroundColor { get; set; }
-
-        public string name { get; set; }
-
-        public Settings()
-        {
-            name = "Username";
-
-            foregroundColor = ConsoleColor.White;
-            backgroundColor = ConsoleColor.Black;
-        }
-
-        public Settings(string sName, ConsoleColor foreground, ConsoleColor background)
-        {
-            name = sName;
-            foregroundColor = foreground;
-            backgroundColor = background;
-        }
-
-        public void SwapColors()
-        {
-            ConsoleColor temp = foregroundColor;
-
-            foregroundColor = backgroundColor;
-            backgroundColor = temp;
-        }
-    }
-
-    public static void SaveSettingsToFile(Settings settings, string file)
-    {
-        string data = SaveSettings(settings);
-
-        if (data == null)
-            throw new InsufficientExecutionStackException("BOOP!");
-
-        using (StreamWriter sw = new StreamWriter(file))
-        {
-            sw.WriteLine(data);
-        }
-    }
-
-    public static string SaveSettings(Settings settings)
-    {
-        return JsonSerializer.Serialize(settings);
-    }
-
-    public static Settings LoadSettingsFromFile(string file)
-    {
-        string fileContents = string.Join("\n", System.IO.File.ReadAllLines(file));
-
-        Settings settings = JsonSerializer.Deserialize<Settings>(fileContents);
-
-        LoadSettings(settings);
-
-        return settings;
-    }
-
-    public static void LoadSettings(Settings settings)
-    {
-        Console.BackgroundColor = settings.backgroundColor;
-        Console.ForegroundColor = settings.foregroundColor;
-    }
 
     //Main program
     static void Main(string[] args)
@@ -93,18 +20,25 @@ class Program
 
         try
         {
-            settings = LoadSettingsFromFile(SETTINGS_FILE_LOCATION);
+            try
+            {
+                settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
+            }
+            catch
+            {
+                if (!Directory.Exists("./SETTINGS"))
+                {
+                    Directory.CreateDirectory("./SETTINGS");
+                }
+
+                settings = new Settings();
+                Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+                Settings.LoadSettings(settings);
+            }
         }
         catch
         {
-            if (!Directory.Exists("./SETTINGS"))
-            {
-                Directory.CreateDirectory("./SETTINGS");
-            }
-            
-            settings = new Settings();
-            SaveSettingsToFile(settings, SETTINGS_FILE_LOCATION);
-            LoadSettings(settings);
+            throw new FileLoadException("BlackJack cannot read/write files in its directory, please make sure it is in a directory it has the ability to edit");
         }
 
         bool doMenu = false;
@@ -113,6 +47,9 @@ class Program
         {
             doMenu = Menu();
         }
+
+        Console.WriteLine("GoodBye!");
+        Console.WriteLine("See you soon! (we hope you spend even more money next time)");
     }
 
     //Menu
@@ -130,6 +67,10 @@ class Program
             Console.WriteLine("  ##  ##   ##     #####  ##       ####   ##  ##   #####  ##       ####");
             Console.WriteLine("  ##  ##   ##    ##  ##  ##  ##   ## ##  ##  ##  ##  ##  ##  ##   ## ##");
             Console.WriteLine("  ######   ####    ### ##  ####   ###  ##  ####    ### ##  ####   ###  ##");
+
+            #if DEBUG
+            Console.WriteLine("DEBUG");
+            #endif
 
             Console.WriteLine("");
             Console.WriteLine("");
@@ -149,14 +90,14 @@ class Program
                 iChoice = Convert.ToInt16(choice);
                 doIt = true;
             }
-            catch {}
+            catch { }
 
             if (doIt)
             {
                 switch (Convert.ToInt16(iChoice))
                 {
                     case 1:
-                        BJTime();
+                        BJGame.BJTime();
                         break;
                     case 2:
                         Rules();
@@ -176,9 +117,7 @@ class Program
     //Subroutine to output options
     static void Rules()
     {
-        string ruleLoc = "./Ass/Rules.txt";
-
-        using (StreamReader sr = new StreamReader(ruleLoc))
+        using (StreamReader sr = new StreamReader(FileLib.GetFullAddress(FileLib.RULES_FILE_LOCATION)))
         {
             while (sr.Peek() >= 0)
             {
@@ -205,19 +144,85 @@ class Program
         Console.WriteLine("Please enter your credit card details below to prepurchase for the LOW LOW price of $38.99*");
         Console.WriteLine("* not including the $69.99 prepurchase fee :)");*/ // i know, its sad to see this go
 
-        Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
-        Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
-        Console.WriteLine("3: Username:         " + settings.name);
-
-        Console.WriteLine();
-        Console.WriteLine("Enter M to return to menu.");
-
         while (true)
         {
+            Settings.LoadSettings(settings);
+
+            Console.Clear();
+
+            Console.WriteLine("1: Background color: " + settings.backgroundColor.ToString());
+            Console.WriteLine("2: Foreground color: " + settings.foregroundColor.ToString());
+            Console.WriteLine("3: Username:         " + settings.name);
+
+            Console.WriteLine();
+            Console.WriteLine("Enter M to return to menu.");
+
             ConsoleKeyInfo mForMenu = Console.ReadKey();
 
             if (mForMenu.Key == ConsoleKey.M)
+            {
+                Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+
                 return;
+            }
+
+            if (mForMenu.Key == ConsoleKey.D1)
+                settings.backgroundColor = SelectConsoleColor(settings.backgroundColor);
+
+            if (mForMenu.Key == ConsoleKey.D2)
+                settings.foregroundColor = SelectConsoleColor(settings.foregroundColor);
+        }
+    }
+
+    static ConsoleColor SelectConsoleColor(ConsoleColor original = ConsoleColor.Black)
+    {
+        ConsoleColor[] allColors = (ConsoleColor[])ConsoleColor.GetValues(typeof(ConsoleColor));
+
+        int selected = -1;
+
+        foreach (ConsoleColor someColors in allColors)
+        {
+            selected++;
+
+            if (someColors == original)
+                break;
+        }
+
+        while (true)
+        {
+            if (allColors[selected] == ConsoleColor.Black)
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+
+
+            Console.ForegroundColor = allColors[selected];
+
+            Console.Clear();
+
+            Console.WriteLine(allColors[selected].ToString());
+
+            ConsoleKey inputKey = Console.ReadKey().Key;
+
+            if (inputKey == ConsoleKey.Enter)
+                return allColors[selected];
+
+            if (inputKey == ConsoleKey.LeftArrow)
+                selected--;
+
+            if (inputKey == ConsoleKey.RightArrow)
+                selected++;
+
+
+            if (selected < 0)
+                selected = allColors.Length - 1;
+
+            if (selected >= allColors.Length)
+                selected = 0;
         }
     }
 
@@ -228,250 +233,20 @@ class Program
     // <3
     // yes we do now get back to work, no toilet breaks
     // ifg (wot dis mene) you need to go, please use the bottle
-    
+
 
     // TOP TEXT
 
     // FUNNY IMAGE
 
     // BOTTOM TEXT
+
     // This post was made by Javascript gang
     // THIS WAS MADE BY THE JAVA GANG LMAO (we think were so funny) 8==D
     // mfs the type to say ROFL out loud
-    
-    public static int[] Game()
-    {
-        List<Card> deck = Card.Deck().ToList<Card>();
+    // mfs write comments instead of coding lmao
+    // mfs who say LMAO out loud "luh-maohw"
 
-        Random rng = new Random();
-
-        for (int i = 0; i < rng.Next(40, 99); i++) { rng.Next(); } // randomize the random
-
-        deck = deck.OrderBy(x => rng.Next()).ToList<Card>(); // shuffle
-
-        List<Card> player1 = new List<Card>();
-        List<Card> player2 = new List<Card>();
-
-        for (int i = 0; i < 2; i++)
-        {
-            player1.Add(deck[0]);
-            deck.RemoveAt(0);
-
-            player2.Add(deck[0]);
-            deck.RemoveAt(0);
-        }
-
-        bool stop = false;
-
-        do
-        {
-            Console.Clear();
-
-            Console.WriteLine("COM:");
-            OutputCardArray(new Card[] { player2.ToArray()[0] });
-            Console.WriteLine("YOU:");
-            OutputCardArray(player1.ToArray());
-            Console.WriteLine();
-            Console.Write("HIT? ");
-
-            string playerIn = Console.ReadLine();
-            Console.WriteLine();
-
-            if (playerIn.ToUpper() == "Y")
-            {
-                player1.Add(deck[0]);
-                deck.RemoveAt(0);
-            }
-            else if (playerIn.ToUpper() == "N")
-            {
-                stop = true;
-            }
-        }
-        while (!stop && Card.Score(player1.ToArray()) <= 21); // loverly logic
-
-        Console.Clear();
-
-        while (Card.Score(player2.ToArray()) <= 21 && (Card.Score(player1.ToArray()) > 21 || Card.Score(player1.ToArray()) < Card.Score(player2.ToArray()))) // even better logic
-        {
-            player2.Add(deck[0]);
-            deck.RemoveAt(0);
-        }
-
-        Console.WriteLine("COM:");
-        OutputCardArray(player2.ToArray());
-        Console.WriteLine("YOU:");
-        OutputCardArray(player1.ToArray());
-
-        int score = GetWinner(Card.Score(player1.ToArray()), Card.Score(player2.ToArray()));
-
-        if (score == 0) // draw = dealer win
-            score = 2;
-
-        return new int[] { score , Card.Score(player1.ToArray()) , Card.Score(player2.ToArray()) };
-    }
-
-    public static void OutputCardArray(Card[] chards)
-    {
-        string pout = "";
-
-        string[] chardID = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-
-        foreach (Card chard in chards)
-        {
-            pout += chard.GetSuiteChar() + chardID[chard.num] + " ";
-        }
-
-        Console.WriteLine(pout);
-    }
-
-    static void BJTime()
-    {
-        int score = 0;
-
-        while (true)
-        {
-            int[] gs = Game();
-            score += gs[0];
-
-            Console.WriteLine();
-            Console.WriteLine(gs[0] == 1 ? "you won!" : "you lost :(");
-            Console.WriteLine();
-            Console.WriteLine("the dealers cards were worth: " + gs[2].ToString());
-            Console.WriteLine("your cards were worth: " + gs[1].ToString());
-            Console.WriteLine();
-            Console.WriteLine("Score: " + score.ToString());
-            Console.ReadLine();
-        }
-    }
-
-    public static int GetWinner(int score1, int score2) // 0 - noone, 1 - score1, 2 - score2
-    {
-        if (score1 > 21 && score2 > 21) // both over limit
-            return 0;
-
-        if (score1 > 21) // score1 over limit
-            return 2;
-
-        if (score2 > 21) // score2 over limit
-            return 1;
-
-        if (score1 == score2) // equal
-            return 0;
-
-        if (score1 > score2) // score1 LETSSS GOOO
-            return 1;
-        else
-            return 2;
-    }
-
-    public class Card
-    {
-        public static string[] suiteChar = { "♣", "♠", "♥", "♦" };
-
-        public int num;
-        public int suite;
-
-        public Card(string Isuite, int Inum)
-        {
-            switch (Isuite.ToUpper())
-            {
-                case "CLUBS":
-                    suite = 0;
-                    break;
-
-                case "SPADES":
-                    suite = 1;
-                    break;
-
-                case "HEARTS":
-                    suite = 2;
-                    break;
-
-                case "DIAMONDS":
-                    suite = 3;
-                    break;
-            }
-
-            num = Inum;
-        }
-
-        public Card(int Isuite, int Inum)
-        {
-            suite = Isuite;
-            num = Inum;
-        }
-
-        public string GetSuite()
-        {
-            switch (suite)
-            {
-                case 0:
-                    return "CLUBS";
-
-                case 1:
-                    return "SPADES";
-
-                case 2:
-                    return "HEARTS";
-
-                default:
-                    return "DIAMONDS";
-            }
-        }
-
-        public string GetSuiteChar()
-        {
-            return (string)suiteChar[suite];
-        }
-
-        public static Card[] Deck()
-        {
-            Card[] deck = new Card[52];
-
-            int i = 0;
-
-            for (int suite = 0; suite < 4; suite++)
-            {
-                for (int num = 0; num < 13; num++)
-                {
-                    deck[i++] = new Card(suite, num);
-                }
-            }
-
-            return deck;
-        }
-
-        public static int Score(Card[] chards)
-        {
-            int acesOHYEAH = 0;
-            int score = 0;
-
-            for (int i = 0; i < chards.Length; i++)
-            {
-                if (chards[i].num >= 1) // not an ace
-                {
-                    if (chards[i].num >= 10) // is a symbol card
-                    {
-                        score += 10;
-                    }
-                    else // die nerd
-                    {
-                        score += chards[i].num + 1; // cards start at 0, but scoring has to be + 1, so ace (0) is 1
-                    }
-                }
-                else // ACE!
-                {
-                    acesOHYEAH++; // OHYEAH
-                }
-            }
-
-            if (acesOHYEAH == 0)
-                return score;
-
-            if (score + (acesOHYEAH * 11) > 21)
-                return score + (acesOHYEAH * 1);
-
-            return score + (acesOHYEAH * 11);
-        }//we are very productive at bj's
-    }
+    // OH NO, WHERE DID THE CODE GO
+    // where did the code go?
 }
