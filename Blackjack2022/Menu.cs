@@ -51,6 +51,40 @@ namespace Blackjack2022
 				}
 			}
 		}
-	}
+
+		public static int ChooseNumber(int min = 0, int max = 0)
+		{
+			if (max <= 0)
+				max = 10;
+
+			if (min == 0)
+				min = 1;
+
+            while (true)
+            {
+                ConsoleKey input = Console.ReadKey().Key;
+
+                for (int i = min; i < max; i++)
+                {
+                    if (input == inputKeys[i - 1])
+                        return i;
+                }
+            }
+        }
+
+        public static int ChooseOption(ConsoleKey[] options)
+        {
+			while (true)
+            {
+                ConsoleKey input = Console.ReadKey().Key;
+
+                for (int i = 0; i < options.Length; i++)
+                {
+                    if (input == inputKeys[i])
+                        return i;
+                }
+            }
+        }
+    }
 }
 
