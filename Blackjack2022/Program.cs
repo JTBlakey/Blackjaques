@@ -2,6 +2,7 @@
 // Copyright 2022
 // <3
 // <3
+// <3
 
 using System.Text;
 
@@ -66,6 +67,10 @@ class Program
             Console.WriteLine("  ##  ##   ##     #####  ##       ####   ##  ##   #####  ##       ####");
             Console.WriteLine("  ##  ##   ##    ##  ##  ##  ##   ## ##  ##  ##  ##  ##  ##  ##   ## ##");
             Console.WriteLine("  ######   ####    ### ##  ####   ###  ##  ####    ### ##  ####   ###  ##");
+
+            #if DEBUG
+            Console.WriteLine("DEBUG");
+            #endif
 
             Console.WriteLine("");
             Console.WriteLine("");
