@@ -25,11 +25,14 @@ namespace Blackjack2022
 			}
 
 			Console.WriteLine();
-			Console.WriteLine(inputPrompt);
+			Console.Write((inputPrompt == "") ? "Option: " : inputPrompt);
 
 			while (true)
 			{
 				ConsoleKey input = Console.ReadKey().Key;
+
+				if (input == menuReturn)
+					return -1;
 
 				for (int i = 1; i <= menuItems.Length; i++)
 				{
