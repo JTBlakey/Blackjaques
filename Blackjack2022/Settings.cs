@@ -13,8 +13,8 @@ namespace Blackjack2022
         {
             name = "Username";
 
-            foregroundColor = Console.ForegroundColor;
-            backgroundColor = Console.BackgroundColor;
+            foregroundColor = ConsoleColor.White;
+            backgroundColor = ConsoleColor.Black;
         }
 
         public Settings(string sName, ConsoleColor foreground, ConsoleColor background)
@@ -63,7 +63,10 @@ namespace Blackjack2022
         {
             string fileContents = string.Join("\n", System.IO.File.ReadAllLines(FileLib.GetFullAddress(file)));
 
-            Settings settings = JsonSerializer.Deserialize<Settings>(fileContents);
+            Settings? settings = JsonSerializer.Deserialize<Settings>(fileContents);
+
+            if (settings == null)
+                throw new FileLoadException("Settings file loaded incorectly, please delete the file");
 
             LoadSettings(settings);
 
