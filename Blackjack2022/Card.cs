@@ -82,6 +82,9 @@
             int acesOHYEAH = 0;
             int score = 0;
 
+            if (chards.Length == 5)
+                return -1;
+
             for (int i = 0; i < chards.Length; i++)
             {
                 if (chards[i].num >= 1) // not an ace

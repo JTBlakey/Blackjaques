@@ -56,8 +56,10 @@ namespace Blackjack2022
                 {
                     if (playerIn.ToUpper() == "Y")
                     {
-                        player1.Add(deck[0]);
-                        deck.RemoveAt(0);
+                        //player1.Add(deck[0]);
+                        //deck.RemoveAt(0);
+
+                        player1.Add(new Card(1, 1));
                     }
                     else if (playerIn.ToUpper() == "N")
                     {
@@ -75,7 +77,7 @@ namespace Blackjack2022
                     }
                 }                
             }
-            while (!stop && (Card.Score(player1.ToArray()) <= 21)); // loverly logic (much better than it was)
+            while ((!stop && (Card.Score(player1.ToArray()) <= 21)) && player1.Count < 5); // loverly logic (much better than it was)
 
             Console.Clear();
 
@@ -153,6 +155,9 @@ namespace Blackjack2022
 
         public static int GetWinner(int score1, int score2) // 0 - noone, 1 - score1, 2 - score2
         {
+            if (score1 < 0)
+                return 1;
+
             if (score1 > 21 && score2 > 21) // both over limit
                 return 0;
 
