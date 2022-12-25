@@ -83,10 +83,13 @@ namespace Blackjack2022
 
             // player1 <= 21, player2 <= player1
 
-            while (Card.Score(player1.ToArray()) <= 21 && (Card.Score(player2.ToArray()) <= Card.Score(player1.ToArray()))) // even better logic
+            if (Card.Score(player1.ToArray()) > 0)
             {
-                player2.Add(deck[0]);
-                deck.RemoveAt(0);
+                while (Card.Score(player1.ToArray()) <= 21 && (Card.Score(player2.ToArray(), true) <= Card.Score(player1.ToArray()))) // even better logic
+                {
+                    player2.Add(deck[0]);
+                    deck.RemoveAt(0);
+                }
             }
 
             Console.WriteLine("COM:");
@@ -94,12 +97,12 @@ namespace Blackjack2022
             Console.WriteLine("YOU:");
             OutputCardArray(player1.ToArray());
 
-            int score = GetWinner(Card.Score(player1.ToArray()), Card.Score(player2.ToArray()));
+            int score = GetWinner(Card.Score(player1.ToArray()), Card.Score(player2.ToArray(), true));
 
             if (score == 0) // draw = dealer win
                 score = 2;
 
-            return new int[] { score, Card.Score(player1.ToArray()), Card.Score(player2.ToArray()) };
+            return new int[] { score, Card.Score(player1.ToArray(), true), Card.Score(player2.ToArray(), true) }; // player has to be dealer here, as we need positive score (even if lower)
         }
 
         public static void OutputCardArray(Card[] chards, uint show = 0)
