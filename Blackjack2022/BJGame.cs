@@ -85,9 +85,9 @@ namespace Blackjack2022
 
                 Console.Clear();
 
-                Console.WriteLine("COM:");
-                OutputCardArray(player2.ToArray(), 1);
-                Console.WriteLine("YOU:");
+                Console.WriteLine("COM:" + ((Program.debugPlusPlus) ? Card.Score(player2.ToArray()).ToString() : ""));
+                OutputCardArray(player2.ToArray(), (uint)((Program.debugPlusPlus) ? 2 : 1));
+                Console.WriteLine("YOU:" + ((Program.debugPlusPlus) ? Card.Score(player1.ToArray()).ToString() : ""));
                 OutputCardArray(player1.ToArray());
                 Console.WriteLine();
 
@@ -96,6 +96,11 @@ namespace Blackjack2022
                     Console.WriteLine("You can also press [B] to burn");
                     Console.WriteLine();
                 }
+
+                #if DEBUG
+                if (Program.debugPlusPlus)
+                    OutputCardArray(deck.ToArray());
+                #endif
 
 
                 Console.Write("HIT? ");
@@ -130,7 +135,7 @@ namespace Blackjack2022
 
             Console.Clear();
 
-            // player1 <= 21, player2 <= player1
+            // player1 <= 21 && player2 <= player1
 
             if (Card.Score(player1.ToArray()) > 0)
             {
@@ -138,6 +143,20 @@ namespace Blackjack2022
                 {
                     player2.Add(deck[0]);
                     deck.RemoveAt(0);
+
+#if DEBUG
+                    if (Program.debugPlusPlus)
+                    {
+                        Console.Clear();
+
+                        Console.WriteLine("dealer dealing cards to dealer");
+                        OutputCardArray(player2.ToArray());
+                        Console.WriteLine(Card.Score(player2.ToArray()).ToString());
+                        OutputCardArray(deck.ToArray());
+
+                        Console.ReadLine();
+                    }
+#endif
                 }
             }
 
@@ -177,14 +196,44 @@ namespace Blackjack2022
             Console.WriteLine(pout);
         }
 
-        public static void BJTime()
+        public static long BJTime(long money = 10)
         {
             int score = 0;
 
             while (true)
             {
+                long bet = -1;
+
+                while (true)
+                {
+                    Console.Clear();
+
+                    Console.WriteLine("Balance: $" + money.ToString());
+                    Console.Write("Bet: $");
+
+                    string? betInputString = Console.ReadLine();
+
+                    try
+                    {
+                        bet = Convert.ToInt64(betInputString);
+
+                        if (bet >= 0 && bet <= money)
+                        {
+                            break;
+                        }
+                    }
+                    catch { }
+                }
+
                 GameReturnData gs = Game();
                 score += gs.p1Won ? 1 : 0;
+
+                if (money == 0 && gs.p1Won)
+                    money++;
+
+                money += (gs.p1Won) ? bet : -bet;
+
+                Console.Clear();
 
                 Console.WriteLine();
                 Console.WriteLine(gs.p1Won ? "you won!" : "you lost :(");
@@ -193,13 +242,14 @@ namespace Blackjack2022
                 Console.WriteLine("your cards where worth: " + gs.P1ScoreString());
                 Console.WriteLine();
                 Console.WriteLine("Score: " + score.ToString());
+                Console.WriteLine("Balance: $" + money.ToString());
 
-                Console.WriteLine("press enter to play again or press escape to go back to the menu");
+                Console.WriteLine("\npress enter to play again or press escape to go back to the menu");
 
                 ConsoleKey boop = Console.ReadKey().Key;
 
                 if (boop == ConsoleKey.Escape)
-                    return;
+                    return money;
             }
         }
 

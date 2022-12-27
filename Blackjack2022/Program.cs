@@ -10,30 +10,69 @@ namespace Blackjack2022;
 
 class Program
 {
-
     public static Settings settings = new Settings();
+    public static Player player = new Player();
+
+    public static bool debugPlusPlus = false;
 
     //Main program
     static void Main(string[] args)
     {
+        #if DEBUG
+        foreach (string arg in args)
+            if (arg.ToUpper() == "DEBUG++")
+                debugPlusPlus = true;
+        #endif
+
         Console.OutputEncoding = Encoding.UTF8; // allow emojis
 
         try
         {
             try
             {
-                settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
+                try
+                {
+                    settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
+                }
+                catch
+                {
+                    settings = Settings.LoadSettingsFromFile(FileLib.OLD_SETTINGS_FILE_LOCATION);
+
+                    Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+                }
             }
             catch
             {
-                if (!Directory.Exists("./SETTINGS"))
+                if (!Directory.Exists("./DATA"))
                 {
-                    Directory.CreateDirectory("./SETTINGS");
+                    Directory.CreateDirectory("./DATA");
                 }
 
                 settings = new Settings();
                 Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
                 Settings.LoadSettings(settings);
+            }
+        }
+        catch
+        {
+            throw new FileLoadException("BlackJack cannot read/write files in its directory, please make sure it is in a directory it has the ability to edit");
+        }
+
+        try
+        {
+            try
+            {
+                player = Player.LoadPlayerFromFile(FileLib.PLAYER_FILE_LOCATION);
+            }
+            catch
+            {
+                if (!Directory.Exists("./DATA"))
+                {
+                    Directory.CreateDirectory("./DATA");
+                }
+
+                player = new Player();
+                Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
             }
         }
         catch
@@ -48,7 +87,10 @@ class Program
             doMenu = MainMenu();
         }
 
-        Console.WriteLine("GoodBye!");
+        Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+        Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
+
+        Console.WriteLine("\n\nGoodBye!");
         Console.WriteLine("See you soon! (we hope you spend even more money next time)");
     }
 
@@ -69,7 +111,7 @@ class Program
             Console.WriteLine("  ######   ####    ### ##  ####   ###  ##  ####    ### ##  ####   ###  ##");
 
             #if DEBUG
-            Console.WriteLine("DEBUG");
+            Console.WriteLine("DEBUG" + (debugPlusPlus ? "++" : "")); // make sure people know that they running debug version (should probably show build no aswell)
             #endif
 
             Console.WriteLine("");
@@ -86,7 +128,7 @@ class Program
             switch (iChoice)
             {
                 case 1:
-                    BJGame.BJTime();
+                    player.money = BJGame.BJTime(player.money);
                     break;
                 case 2:
                     Rules();
@@ -142,7 +184,6 @@ class Program
             {
                 "Background color: " + settings.backgroundColor.ToString(),
                 "Foreground color: " + settings.foregroundColor.ToString(),
-                "Username:         " + settings.name,
                 "Reset All"
             }, "", ConsoleKey.M);
 
@@ -158,9 +199,6 @@ class Program
 
             if (option == 2)
                 settings.foregroundColor = SelectConsoleColor(settings.foregroundColor);
-
-            if (option == 3)
-                Console.WriteLine("FEATURE NOT ADDED YET");
 
             if (option == 4)
                 settings = new Settings();
