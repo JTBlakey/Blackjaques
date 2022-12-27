@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Ass\Rules.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -16,4 +19,7 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
 </Project>
