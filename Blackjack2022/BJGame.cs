@@ -194,7 +194,7 @@ namespace Blackjack2022
                     Console.WriteLine("Balance: $" + money.ToString());
                     Console.Write("Bet: $");
 
-                    string betInputString = Console.ReadLine();
+                    string? betInputString = Console.ReadLine();
 
                     try
                     {
