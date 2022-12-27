@@ -85,9 +85,9 @@ namespace Blackjack2022
 
                 Console.Clear();
 
-                Console.WriteLine("COM:");
+                Console.WriteLine("COM:" + ((Program.debugPlusPlus) ? Card.Score(player2.ToArray()).ToString() : ""));
                 OutputCardArray(player2.ToArray(), (uint)((Program.debugPlusPlus) ? 2 : 1));
-                Console.WriteLine("YOU:");
+                Console.WriteLine("YOU:" + ((Program.debugPlusPlus) ? Card.Score(player1.ToArray()).ToString() : ""));
                 OutputCardArray(player1.ToArray());
                 Console.WriteLine();
 
