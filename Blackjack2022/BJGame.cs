@@ -112,10 +112,8 @@ namespace Blackjack2022
                 {
                     if (playerIn.ToUpper() == "Y")
                     {
-                        //player1.Add(deck[0]);
-                        //deck.RemoveAt(0);
-
-                        player1.Add(new Card(1, 1));
+                        player1.Add(deck[0]);
+                        deck.RemoveAt(0);
                     }
                     else if (playerIn.ToUpper() == "N")
                     {
