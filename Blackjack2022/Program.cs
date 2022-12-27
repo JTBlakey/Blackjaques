@@ -10,13 +10,20 @@ namespace Blackjack2022;
 
 class Program
 {
-
     public static Settings settings = new Settings();
     public static Player player = new Player();
+
+    public static bool debugPlusPlus = false;
 
     //Main program
     static void Main(string[] args)
     {
+        #if DEBUG
+        foreach (string arg in args)
+            if (arg.ToUpper() == "DEBUG++")
+                debugPlusPlus = true;
+        #endif
+
         Console.OutputEncoding = Encoding.UTF8; // allow emojis
 
         try
@@ -104,7 +111,7 @@ class Program
             Console.WriteLine("  ######   ####    ### ##  ####   ###  ##  ####    ### ##  ####   ###  ##");
 
             #if DEBUG
-            Console.WriteLine("DEBUG"); // make sure people know that they running debug version (should probably show build no aswell)
+            Console.WriteLine("DEBUG" + (debugPlusPlus ? "++" : "")); // make sure people know that they running debug version (should probably show build no aswell)
             #endif
 
             Console.WriteLine("");
