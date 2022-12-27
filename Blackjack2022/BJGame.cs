@@ -196,14 +196,44 @@ namespace Blackjack2022
             Console.WriteLine(pout);
         }
 
-        public static void BJTime()
+        public static long BJTime(long money = 10)
         {
             int score = 0;
 
             while (true)
             {
+                long bet = -1;
+
+                while (true)
+                {
+                    Console.Clear();
+
+                    Console.WriteLine("Balance: $" + money.ToString());
+                    Console.Write("Bet: $");
+
+                    string? betInputString = Console.ReadLine();
+
+                    try
+                    {
+                        bet = Convert.ToInt64(betInputString);
+
+                        if (bet >= 0 && bet <= money)
+                        {
+                            break;
+                        }
+                    }
+                    catch { }
+                }
+
                 GameReturnData gs = Game();
                 score += gs.p1Won ? 1 : 0;
+
+                if (money == 0 && gs.p1Won)
+                    money++;
+
+                money += (gs.p1Won) ? bet : -bet;
+
+                Console.Clear();
 
                 Console.WriteLine();
                 Console.WriteLine(gs.p1Won ? "you won!" : "you lost :(");
@@ -212,13 +242,14 @@ namespace Blackjack2022
                 Console.WriteLine("your cards where worth: " + gs.P1ScoreString());
                 Console.WriteLine();
                 Console.WriteLine("Score: " + score.ToString());
+                Console.WriteLine("Balance: $" + money.ToString());
 
-                Console.WriteLine("press enter to play again or press escape to go back to the menu");
+                Console.WriteLine("\npress enter to play again or press escape to go back to the menu");
 
                 ConsoleKey boop = Console.ReadKey().Key;
 
                 if (boop == ConsoleKey.Escape)
-                    return;
+                    return money;
             }
         }
 
