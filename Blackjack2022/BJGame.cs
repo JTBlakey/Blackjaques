@@ -135,7 +135,7 @@ namespace Blackjack2022
 
             Console.Clear();
 
-            // player1 <= 21, player2 <= player1
+            // player1 <= 21 && player2 <= player1
 
             if (Card.Score(player1.ToArray()) > 0)
             {
@@ -143,6 +143,20 @@ namespace Blackjack2022
                 {
                     player2.Add(deck[0]);
                     deck.RemoveAt(0);
+
+#if DEBUG
+                    if (Program.debugPlusPlus)
+                    {
+                        Console.Clear();
+
+                        Console.WriteLine("dealer dealing cards to dealer");
+                        OutputCardArray(player2.ToArray());
+                        Console.WriteLine(Card.Score(player2.ToArray()).ToString());
+                        OutputCardArray(deck.ToArray());
+
+                        Console.ReadLine();
+                    }
+#endif
                 }
             }
 
