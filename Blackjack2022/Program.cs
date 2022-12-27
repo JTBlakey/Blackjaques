@@ -48,6 +48,8 @@ class Program
             doMenu = MainMenu();
         }
 
+        Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+
         Console.WriteLine("GoodBye!");
         Console.WriteLine("See you soon! (we hope you spend even more money next time)");
     }
@@ -86,7 +88,7 @@ class Program
             switch (iChoice)
             {
                 case 1:
-                    BJGame.BJTime();
+                    settings.money = BJGame.BJTime(settings.money);
                     break;
                 case 2:
                     Rules();
