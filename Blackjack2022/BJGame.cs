@@ -86,7 +86,7 @@ namespace Blackjack2022
                 Console.Clear();
 
                 Console.WriteLine("COM:");
-                OutputCardArray(player2.ToArray(), 1);
+                OutputCardArray(player2.ToArray(), (uint)((Program.debugPlusPlus) ? 2 : 1));
                 Console.WriteLine("YOU:");
                 OutputCardArray(player1.ToArray());
                 Console.WriteLine();
@@ -96,6 +96,11 @@ namespace Blackjack2022
                     Console.WriteLine("You can also press [B] to burn");
                     Console.WriteLine();
                 }
+
+                #if DEBUG
+                if (Program.debugPlusPlus)
+                    OutputCardArray(deck.ToArray());
+                #endif
 
 
                 Console.Write("HIT? ");
