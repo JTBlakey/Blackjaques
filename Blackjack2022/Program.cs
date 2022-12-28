@@ -26,58 +26,39 @@ class Program
 
         Console.OutputEncoding = Encoding.UTF8; // allow emojis
 
+        if (!Directory.Exists("./DATA"))
+        {
+            Directory.CreateDirectory("./DATA");
+        }
+
         try
         {
             try
             {
-                try
-                {
-                    settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
-                }
-                catch
-                {
-                    settings = Settings.LoadSettingsFromFile(FileLib.OLD_SETTINGS_FILE_LOCATION);
-
-                    Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
-                }
+                settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
             }
             catch
             {
-                if (!Directory.Exists("./DATA"))
-                {
-                    Directory.CreateDirectory("./DATA");
-                }
+                settings = Settings.LoadSettingsFromFile(FileLib.OLD_SETTINGS_FILE_LOCATION);
 
-                settings = new Settings();
                 Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
-                Settings.LoadSettings(settings);
             }
         }
         catch
         {
-            throw new FileLoadException("BlackJack cannot read/write files in its directory, please make sure it is in a directory it has the ability to edit");
+            settings = new Settings();
+            Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+            Settings.LoadSettings(settings);
         }
 
         try
         {
-            try
-            {
-                player = Player.LoadPlayerFromFile(FileLib.PLAYER_FILE_LOCATION);
-            }
-            catch
-            {
-                if (!Directory.Exists("./DATA"))
-                {
-                    Directory.CreateDirectory("./DATA");
-                }
-
-                player = new Player();
-                Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
-            }
+            player = Player.LoadPlayerFromFile(FileLib.PLAYER_FILE_LOCATION);
         }
         catch
         {
-            throw new FileLoadException("BlackJack cannot read/write files in its directory, please make sure it is in a directory it has the ability to edit");
+            player = new Player();
+            Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
         }
 
         bool doMenu = false;
