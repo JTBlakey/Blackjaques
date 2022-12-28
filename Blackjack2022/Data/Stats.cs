@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json;
+
 namespace Blackjack2022
 {
 	public class Stats
@@ -27,6 +29,36 @@ namespace Blackjack2022
 			this.totalWin = 0;
 			this.totalLoss = 0;
 		}
-	}
+
+        public static void SaveStatsToFile(Stats Stats, string file)
+        {
+            string data = SaveStats(Stats);
+
+            if (data == null)
+                throw new InsufficientExecutionStackException("BOOP!");
+
+            using (StreamWriter sw = new StreamWriter(FileLib.GetFullAddress(file)))
+            {
+                sw.WriteLine(data);
+            }
+        }
+
+        public static string SaveStats(Stats Stats)
+        {
+            return JsonSerializer.Serialize(Stats);
+        }
+
+        public static Stats LoadStatsFromFile(string file)
+        {
+            string fileContents = string.Join("\n", System.IO.File.ReadAllLines(FileLib.GetFullAddress(file)));
+
+            Stats? Stats = JsonSerializer.Deserialize<Stats>(fileContents);
+
+            if (Stats == null)
+                throw new FileLoadException("Stats file loaded incorectly, please delete the file");
+
+            return Stats;
+        }
+    }
 }
 
