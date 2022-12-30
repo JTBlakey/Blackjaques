@@ -8,7 +8,7 @@
         public const string CREDITS_FILE_LOCATION = "/Ass/Credits.txt";
         public const string SETTINGS_FILE_LOCATION = "/DATA/settings.json";
         public const string PLAYER_FILE_LOCATION = "/DATA/player.json";
-
+        public const string STATS_FILE_LOCATION = "/DATA/stats.json";
 
         public static string GetFullAddress(string file)
         {

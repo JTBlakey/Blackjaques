@@ -12,6 +12,7 @@ class Program
 {
     public static Settings settings = new Settings();
     public static Player player = new Player();
+    public static Stats stats = new Stats();
 
     public static bool debugPlusPlus = false;
 
@@ -61,6 +62,16 @@ class Program
             Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
         }
 
+        try
+        {
+            stats = Stats.LoadStatsFromFile(FileLib.STATS_FILE_LOCATION);
+        }
+        catch
+        {
+            stats = new Stats();
+            Stats.SaveStatsToFile(stats, FileLib.STATS_FILE_LOCATION);
+        }
+
         bool doMenu = false;
 
         while (!doMenu)
@@ -70,9 +81,10 @@ class Program
 
         Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
         Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
+        Stats.SaveStatsToFile(stats, FileLib.STATS_FILE_LOCATION);
 
         Console.WriteLine("\n\nGoodBye!");
-        Console.WriteLine("See you soon! (we hope you spend even more money next time)");
+        Console.WriteLine("\nSee you soon! (we hope you spend even more money next time)");
     }
 
     //Menu
@@ -103,6 +115,7 @@ class Program
                 "Play",
                 "Rules",
                 "Options",
+                "Stats",
                 "Exit"
             });
 
@@ -118,6 +131,9 @@ class Program
                     Options();
                     break;
                 case 4:
+                    Statisics();
+                    break;
+                case 5:
                     return true;
                 default:
                     break;
@@ -235,6 +251,31 @@ class Program
 
             if (selected >= allColors.Length)
                 selected = 0;
+        }
+    }
+
+    static void Statisics()
+    {
+        Console.Clear();
+
+        Console.WriteLine("Games Played: " + stats.gamesPlayed.ToString());
+        Console.WriteLine("Money Made: " + stats.moneyMade.ToString());
+        Console.WriteLine("Money Lost: " + stats.moneyLost.ToString());
+        Console.WriteLine("Total Cards Hit: " + stats.totalCardsHit.ToString());
+        Console.WriteLine("Average Cards Hit: " + stats.averageCardsHit.ToString());
+        Console.WriteLine("Total Win: " + stats.totalWin.ToString());
+        Console.WriteLine("Total Loss: " + stats.totalLoss.ToString());
+        Console.WriteLine("Win Chance: " + stats.winChance.ToString());
+
+        Console.WriteLine();
+        Console.WriteLine("Enter M to return to menu.");
+
+        while (true)
+        {
+            ConsoleKeyInfo mForMenu = Console.ReadKey();
+
+            if (mForMenu.Key == ConsoleKey.M)
+                return;
         }
     }
 

@@ -11,11 +11,11 @@ namespace Blackjack2022
 		public long moneyLost { get; set; }
 
 		public long totalCardsHit { get; set; }
-		public float averageCardsHit { get { return totalCardsHit / gamesPlayed; } }
+		public float averageCardsHit { get { return Divide(totalCardsHit, gamesPlayed); } }
 
 		public long totalWin { get; set; }
 		public long totalLoss { get; set; }
-		public float winChance { get { return totalWin / gamesPlayed; } }
+		public float winChance { get { return Divide(totalWin, gamesPlayed); } }
 
 		public Stats()
 		{
@@ -29,6 +29,16 @@ namespace Blackjack2022
 			this.totalWin = 0;
 			this.totalLoss = 0;
 		}
+
+        private static float Divide(float a, float b, uint percision = 2)
+        {
+            if (a == 0 || b == 0)
+                return 0;
+
+            uint power = (uint)MathF.Pow(10, percision);
+
+            return ((float)((long)((a / b) * power))) / power;
+        }
 
         public static void SaveStatsToFile(Stats Stats, string file)
         {
