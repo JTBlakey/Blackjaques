@@ -12,6 +12,7 @@ class Program
 {
     public static Settings settings = new Settings();
     public static Player player = new Player();
+    public static Stats stats = new Stats();
 
     public static bool debugPlusPlus = false;
 
@@ -26,58 +27,49 @@ class Program
 
         Console.OutputEncoding = Encoding.UTF8; // allow emojis
 
+        if (!Directory.Exists("./DATA"))
+        {
+            Directory.CreateDirectory("./DATA");
+        }
+
         try
         {
             try
             {
-                try
-                {
-                    settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
-                }
-                catch
-                {
-                    settings = Settings.LoadSettingsFromFile(FileLib.OLD_SETTINGS_FILE_LOCATION);
-
-                    Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
-                }
+                settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
             }
             catch
             {
-                if (!Directory.Exists("./DATA"))
-                {
-                    Directory.CreateDirectory("./DATA");
-                }
+                settings = Settings.LoadSettingsFromFile(FileLib.OLD_SETTINGS_FILE_LOCATION);
 
-                settings = new Settings();
                 Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
-                Settings.LoadSettings(settings);
             }
         }
         catch
         {
-            throw new FileLoadException("BlackJack cannot read/write files in its directory, please make sure it is in a directory it has the ability to edit");
+            settings = new Settings();
+            Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+            Settings.LoadSettings(settings);
         }
 
         try
         {
-            try
-            {
-                player = Player.LoadPlayerFromFile(FileLib.PLAYER_FILE_LOCATION);
-            }
-            catch
-            {
-                if (!Directory.Exists("./DATA"))
-                {
-                    Directory.CreateDirectory("./DATA");
-                }
-
-                player = new Player();
-                Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
-            }
+            player = Player.LoadPlayerFromFile(FileLib.PLAYER_FILE_LOCATION);
         }
         catch
         {
-            throw new FileLoadException("BlackJack cannot read/write files in its directory, please make sure it is in a directory it has the ability to edit");
+            player = new Player();
+            Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
+        }
+
+        try
+        {
+            stats = Stats.LoadStatsFromFile(FileLib.STATS_FILE_LOCATION);
+        }
+        catch
+        {
+            stats = new Stats();
+            Stats.SaveStatsToFile(stats, FileLib.STATS_FILE_LOCATION);
         }
 
         bool doMenu = false;
@@ -89,9 +81,10 @@ class Program
 
         Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
         Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
+        Stats.SaveStatsToFile(stats, FileLib.STATS_FILE_LOCATION);
 
         Console.WriteLine("\n\nGoodBye!");
-        Console.WriteLine("See you soon! (we hope you spend even more money next time)");
+        Console.WriteLine("\nSee you soon! (we hope you spend even more money next time)");
     }
 
     //Menu
@@ -122,6 +115,7 @@ class Program
                 "Play",
                 "Rules",
                 "Options",
+                "Stats",
                 "Exit"
             });
 
@@ -137,6 +131,9 @@ class Program
                     Options();
                     break;
                 case 4:
+                    Statisics();
+                    break;
+                case 5:
                     return true;
                 default:
                     break;
@@ -254,6 +251,31 @@ class Program
 
             if (selected >= allColors.Length)
                 selected = 0;
+        }
+    }
+
+    static void Statisics()
+    {
+        Console.Clear();
+
+        Console.WriteLine("Games Played: " + stats.gamesPlayed.ToString());
+        Console.WriteLine("Money Made: " + stats.moneyMade.ToString());
+        Console.WriteLine("Money Lost: " + stats.moneyLost.ToString());
+        Console.WriteLine("Total Cards Hit: " + stats.totalCardsHit.ToString());
+        Console.WriteLine("Average Cards Hit: " + stats.averageCardsHit.ToString());
+        Console.WriteLine("Total Win: " + stats.totalWin.ToString());
+        Console.WriteLine("Total Loss: " + stats.totalLoss.ToString());
+        Console.WriteLine("Win Chance: " + stats.winChance.ToString());
+
+        Console.WriteLine();
+        Console.WriteLine("Enter M to return to menu.");
+
+        while (true)
+        {
+            ConsoleKeyInfo mForMenu = Console.ReadKey();
+
+            if (mForMenu.Key == ConsoleKey.M)
+                return;
         }
     }
 

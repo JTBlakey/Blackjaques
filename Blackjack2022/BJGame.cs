@@ -114,6 +114,8 @@ namespace Blackjack2022
                     {
                         player1.Add(deck[0]);
                         deck.RemoveAt(0);
+
+                        Program.stats.totalCardsHit++;
                     }
                     else if (playerIn.ToUpper() == "N")
                     {
@@ -229,9 +231,26 @@ namespace Blackjack2022
                 score += gs.p1Won ? 1 : 0;
 
                 if (money == 0 && gs.p1Won)
+                {
+                    Program.stats.moneyMade++;
+
                     money++;
+                }
 
                 money += (gs.p1Won) ? bet : -bet;
+
+                if (gs.p1Won)
+                {
+                    Program.stats.moneyMade += bet;
+                    Program.stats.totalWin++;
+                }
+                else
+                {
+                    Program.stats.moneyLost += bet;
+                    Program.stats.totalLoss++;
+                }
+
+                Program.stats.gamesPlayed++;
 
                 Console.Clear();
 
