@@ -10,9 +10,9 @@ namespace Blackjack2022;
 
 class Program
 {
-    public static Settings settings = new Settings();
-    public static Player player = new Player();
-    public static Stats stats = new Stats();
+    public static Settings? settings = new Settings();
+    public static Player? player = new Player();
+    public static Stats? stats = new Stats();
 
     public static bool debugPlusPlus = false;
 
@@ -32,45 +32,32 @@ class Program
             Directory.CreateDirectory("./DATA");
         }
 
-        try
+        if (!File.Exists(FileLib.GetFullAddress(FileLib.SETTINGS_FILE_LOCATION)))
         {
-            try
+            if (File.Exists(FileLib.GetFullAddress(FileLib.OLD_SETTINGS_FILE_LOCATION)))
             {
-                settings = Settings.LoadSettingsFromFile(FileLib.SETTINGS_FILE_LOCATION);
-            }
-            catch
-            {
-                settings = Settings.LoadSettingsFromFile(FileLib.OLD_SETTINGS_FILE_LOCATION);
+                settings = FileLib.Open<Settings>(FileLib.OLD_SETTINGS_FILE_LOCATION);
+                FileLib.Save<Settings>(settings, FileLib.SETTINGS_FILE_LOCATION);
 
-                Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
+                File.Delete(FileLib.GetFullAddress(FileLib.OLD_SETTINGS_FILE_LOCATION));
+                Directory.Delete("./SETTINGS");
             }
         }
-        catch
-        {
+
+        settings = FileLib.Open<Settings>(FileLib.SETTINGS_FILE_LOCATION);
+        player = FileLib.Open<Player>(FileLib.PLAYER_FILE_LOCATION);
+        stats = FileLib.Open<Stats>(FileLib.STATS_FILE_LOCATION);
+
+        if (settings == null)
             settings = new Settings();
-            Settings.SaveSettingsToFile(settings, FileLib.SETTINGS_FILE_LOCATION);
-            Settings.LoadSettings(settings);
-        }
 
-        try
-        {
-            player = Player.LoadPlayerFromFile(FileLib.PLAYER_FILE_LOCATION);
-        }
-        catch
-        {
+        if (player == null)
             player = new Player();
-            Player.SavePlayerToFile(player, FileLib.PLAYER_FILE_LOCATION);
-        }
 
-        try
-        {
-            stats = Stats.LoadStatsFromFile(FileLib.STATS_FILE_LOCATION);
-        }
-        catch
-        {
+        if (stats == null)
             stats = new Stats();
-            Stats.SaveStatsToFile(stats, FileLib.STATS_FILE_LOCATION);
-        }
+
+        Settings.LoadSettings(settings);
 
         bool doMenu = false;
 
