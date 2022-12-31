@@ -6,23 +6,27 @@ namespace Blackjack2022
     {
         public class GameReturnData
         {
-            public int p1Score;
-            public int p2Score;
+            public int dealerScore;
 
-            public string? p1WinCondition;
-            public string? p2WinCondition;
+            public int[] playerScores;
 
-            public bool p1Won;
+            public string? dealerWinCondition;
+            public string?[] playerWinConditions;
+
+            public bool dealerWon;
+
+            public bool[] playerWon;
 
             public GameReturnData() { }
 
-            public GameReturnData(int p1Score, int p2Score)
+            public GameReturnData(int dealerScore, int[] playerScores)
             {
-                this.p1Score = p1Score;
-                this.p2Score = p2Score;
+                this.dealerScore = dealerScore;
+                this.playerScores = playerScores;
 
-                this.p1WinCondition = null;
-                this.p2WinCondition = null;
+                this.dealerWinCondition = null;
+
+                this.playerWinConditions = new string?[playerScores.Length];
 
                 p1Won = (GetWinner(p1Score, p2Score) != 2);
             }
@@ -272,27 +276,55 @@ namespace Blackjack2022
             }
         }
 
-        public static int GetWinner(int score1, int score2) // 0 - noone, 1 - score1, 2 - score2
+        public static bool[] GetWinner(int dealerScore, int[] playerScores) // 0 - dealer, 1, ∞ - playerScores + 1
         {
-            if (score1 < 0)
-                return 1;
+            bool[] scores = new bool[playerScores.Length + 1];
 
-            if (score1 > 21 && score2 > 21) // both over limit
-                return 0;
+            bool overide = false;
 
-            if (score1 > 21) // score1 over limit
-                return 2;
+            for (int i = 0; i < playerScores.Length; i++) // check for negavtive scores - OVERRIDE
+            {
+                if (playerScores[i] < 0)
+                {
+                    scores[i + 1] = true;
 
-            if (score2 > 21) // score2 over limit
-                return 1;
+                    overide = true;
+                }
+            }
 
-            if (score1 == score2) // equal
-                return 0;
+            if (overide)
+                return scores;
 
-            if (score1 > score2) // score1 LETSSS GOOO
-                return 1;
-            else
-                return 2;
+            bool dealerHighest = true;
+
+            for (int i = 1; i < playerScores.Length; i++)
+            {
+                if (playerScores[0] <= playerScores[i])
+                    dealerHighest = false;
+            }
+
+            if (dealerHighest)
+            {
+                scores[0] = true;
+
+                return scores;
+            }
+
+            int highestScore = 0;
+
+            for (int i = 1; i < playerScores.Length; i++)
+            {
+                if (playerScores[i] > highestScore)
+                    highestScore = playerScores[i];
+            }
+
+            for (int i = 1; i < playerScores.Length; i++)
+            {
+                if (playerScores[i] == highestScore)
+                    scores[i] = true;
+            }
+
+            return scores;
         }
     }
 }
