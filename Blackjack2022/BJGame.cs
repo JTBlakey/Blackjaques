@@ -6,52 +6,111 @@ namespace Blackjack2022
     {
         public class GameReturnData
         {
-            public int p1Score;
-            public int p2Score;
+            public int dealerScore;
 
-            public string? p1WinCondition;
-            public string? p2WinCondition;
+            public int[] playerScores;
 
-            public bool p1Won;
+            public string? dealerWinCondition;
+            public string?[] playerWinConditions;
 
-            public GameReturnData() { }
+            public bool dealerWon;
 
-            public GameReturnData(int p1Score, int p2Score)
+            public bool[] playerWon;
+
+            public GameReturnData(int players = 1)
             {
-                this.p1Score = p1Score;
-                this.p2Score = p2Score;
+                this.dealerScore = 0;
 
-                this.p1WinCondition = null;
-                this.p2WinCondition = null;
+                this.playerScores = new int[players];
 
-                p1Won = (GetWinner(p1Score, p2Score) != 2);
+                playerWinConditions = new string?[players];
+
+                dealerWon = false;
+
+                playerWon = new bool[players];
             }
 
-            public GameReturnData(int p1Score, int p2Score, string? p1WinCondition, string? p2WinCondition)
+            public GameReturnData(int dealerScore, int playerScore)
             {
-                this.p1Score = p1Score;
-                this.p2Score = p2Score;
+                this.dealerScore = dealerScore;
+                this.playerScores = new int[] { playerScore };
 
-                this.p1WinCondition = p1WinCondition;
-                this.p2WinCondition = p2WinCondition;
+                this.dealerWinCondition = null;
+                this.playerWinConditions = new string?[] { null };
 
-                p1Won = (GetWinner(p1Score, p2Score) != 2);
+                bool[] win = GetWinner(dealerScore, this.playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
             }
 
-            public string P1ScoreString()
+            public GameReturnData(int dealerScore, int playerScore, string? dealerWinCondition = null, string? playerWinCondition = null)
             {
-                if (p1WinCondition == null)
-                    return p1Score.ToString();
+                this.dealerScore = dealerScore;
+                this.playerScores = new int[] { playerScore };
 
-                return p1WinCondition;
+                this.dealerWinCondition = dealerWinCondition;
+                this.playerWinConditions = new string?[] { playerWinCondition };
+
+                bool[] win = GetWinner(dealerScore, playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
             }
 
-            public string P2ScoreString()
+            public GameReturnData(int dealerScore, int[] playerScores)
             {
-                if (p2WinCondition == null)
-                    return p2Score.ToString();
+                this.dealerScore = dealerScore;
+                this.playerScores = playerScores;
 
-                return p2WinCondition;
+                this.dealerWinCondition = null;
+                this.playerWinConditions = new string?[playerScores.Length];
+
+                bool[] win = GetWinner(dealerScore, playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
+            }
+
+            public GameReturnData(int dealerScore, int[] playerScores, string? dealerWinCondition, string?[] playerWinConditions)
+            {
+                this.dealerScore = dealerScore;
+                this.playerScores = playerScores;
+
+                this.dealerWinCondition = dealerWinCondition;
+
+                this.playerWinConditions = playerWinConditions;
+
+                bool[] win = GetWinner(dealerScore, playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
+            }
+
+            public string DealerScoreString()
+            {
+                if (this.dealerWinCondition == null)
+                    return this.dealerScore.ToString();
+
+                return this.dealerWinCondition;
+            }
+
+            public string PlayerWinString(int player)
+            {
+                if (this.playerWinConditions[player] == null)
+                    return this.playerScores[player].ToString();
+
+#pragma warning disable CS8603 // Possible null reference return. -- imposible - checked above (unless ram is fucked with)
+                return this.playerWinConditions[player];
+#pragma warning restore CS8603 // Possible null reference return.
             }
         }
 
@@ -90,7 +149,7 @@ namespace Blackjack2022
 
                 Console.Clear();
 
-                Console.WriteLine("COM:" + ((Program.debugPlusPlus) ? Card.Score(player2.ToArray()).ToString() : ""));
+                Console.WriteLine("COM:" + ((Program.debugPlusPlus) ? Card.Score(player2.ToArray(), true).ToString() : ""));
                 OutputCardArray(player2.ToArray(), (uint)((Program.debugPlusPlus) ? 2 : 1));
                 Console.WriteLine("YOU:" + ((Program.debugPlusPlus) ? Card.Score(player1.ToArray()).ToString() : ""));
                 OutputCardArray(player1.ToArray());
@@ -185,7 +244,7 @@ namespace Blackjack2022
 
                         Console.WriteLine("dealer dealing cards to dealer");
                         OutputCardArray(player2.ToArray());
-                        Console.WriteLine(Card.Score(player2.ToArray()).ToString());
+                        Console.WriteLine(Card.Score(player2.ToArray()).ToString(), true);
                         OutputCardArray(deck.ToArray());
 
                         Console.ReadLine();
@@ -200,9 +259,9 @@ namespace Blackjack2022
             OutputCardArray(player1.ToArray());
 
             if (Card.Score(player1.ToArray()) > 0)
-                return new GameReturnData(Card.Score(player1.ToArray()), Card.Score(player2.ToArray(), true));
+                return new GameReturnData(Card.Score(player2.ToArray(), true), Card.Score(player1.ToArray()));
             else
-                return new GameReturnData(Card.Score(player1.ToArray()), Card.Score(player2.ToArray(), true), "5 card rule", null);
+                return new GameReturnData(Card.Score(player2.ToArray(), true), Card.Score(player1.ToArray()), null, "5 card rule");
         }
 
         public static void OutputCardArray(Card[] chards, uint show = 0)
@@ -260,18 +319,18 @@ namespace Blackjack2022
                 }
 
                 GameReturnData gs = Game();
-                score += gs.p1Won ? 1 : 0;
+                score += gs.playerWon[0] ? 1 : 0;
 
-                if (money == 0 && gs.p1Won)
+                if (money == 0 && gs.playerWon[0])
                 {
                     Program.stats.moneyMade++;
 
                     money++;
                 }
 
-                money += (gs.p1Won) ? bet : -bet;
+                money += (gs.playerWon[0]) ? bet : -bet;
 
-                if (gs.p1Won)
+                if (gs.playerWon[0])
                 {
                     Program.stats.moneyMade += bet;
                     Program.stats.totalWin++;
@@ -287,10 +346,10 @@ namespace Blackjack2022
                 Console.Clear();
 
                 Console.WriteLine();
-                Console.WriteLine(gs.p1Won ? "you won!" : "you lost :(");
+                Console.WriteLine((gs.playerWon[0]) ? "you won!" : "you lost :(");
                 Console.WriteLine();
-                Console.WriteLine("the dealers cards where worth: " + gs.P2ScoreString());
-                Console.WriteLine("your cards where worth: " + gs.P1ScoreString());
+                Console.WriteLine("the dealers cards where worth: " + gs.DealerScoreString());
+                Console.WriteLine("your cards where worth: " + gs.PlayerWinString(0));
                 Console.WriteLine();
                 Console.WriteLine("Score: " + score.ToString());
                 Console.WriteLine("Balance: $" + money.ToString());
@@ -304,30 +363,55 @@ namespace Blackjack2022
             }
         }
 
-        public static int GetWinner(int score1, int score2) // 0 - noone, 1 - score1, 2 - score2
+        public static bool[] GetWinner(int dealerScore, int[] playerScores) // 0 - dealer, 1, ∞ - playerScores + 1
         {
-            if (score1 < 0)
-                return 1;
+            bool[] scores = new bool[playerScores.Length + 1];
 
-            if (score2 < 0)
-                return 2;
+            bool overide = false;
 
-            if (score1 > 21 && score2 > 21) // both over limit
-                return 0;
+            for (int i = 0; i < playerScores.Length; i++) // check for negavtive scores - OVERRIDE
+            {
+                if (playerScores[i] < 0)
+                {
+                    scores[i + 1] = true;
 
-            if (score1 > 21) // score1 over limit
-                return 2;
+                    overide = true;
+                }
+            }
 
-            if (score2 > 21) // score2 over limit
-                return 1;
+            if (overide)
+                return scores;
 
-            if (score1 == score2) // equal
-                return 0;
+            bool dealerHighest = true;
 
-            if (score1 > score2) // score1 LETSSS GOOO
-                return 1;
-            else
-                return 2;
+            for (int i = 0; i < playerScores.Length; i++)
+            {
+                if (dealerScore <= playerScores[i])
+                    dealerHighest = false;
+            }
+
+            if (dealerHighest)
+            {
+                scores[0] = true;
+
+                return scores;
+            }
+
+            int highestScore = 0;
+
+            for (int i = 0; i < playerScores.Length; i++)
+            {
+                if (playerScores[i] > highestScore)
+                    highestScore = playerScores[i];
+            }
+
+            for (int i = 0; i < playerScores.Length; i++)
+            {
+                if (playerScores[i] == highestScore)
+                    scores[i] = true;
+            }
+
+            return scores;
         }
     }
 }
