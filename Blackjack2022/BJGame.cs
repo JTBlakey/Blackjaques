@@ -79,6 +79,11 @@ namespace Blackjack2022
 
             bool stop = false;
 
+#if DEBUG
+            bool instaWin = false;
+            bool instaLoose = false;
+#endif
+
             do
             {
                 bool canBurn = (player1.Count == 2) && (Card.Score(player1.ToArray()) == 13 || Card.Score(player1.ToArray()) == 14);
@@ -97,10 +102,15 @@ namespace Blackjack2022
                     Console.WriteLine();
                 }
 
-                #if DEBUG
+#if DEBUG
                 if (Program.debugPlusPlus)
                     OutputCardArray(deck.ToArray());
-                #endif
+
+                if (Program.debugPlusPlus)
+                {
+                    Console.WriteLine("\nPress [W] to insta-win or [L] to insta-loose\n");
+                }
+#endif
 
 
                 Console.Write("HIT? ");
@@ -131,11 +141,33 @@ namespace Blackjack2022
                         player1.Add(deck[0]);
                         deck.RemoveAt(0);
                     }
+#if DEBUG
+                    else if (((playerIn.ToUpper()) == "W") && Program.debugPlusPlus)
+                    {
+                        instaWin = true;
+                        stop = true;
+                    }
+                    else if (((playerIn.ToUpper()) == "L") && Program.debugPlusPlus)
+                    {
+                        instaLoose = true;
+                        stop = true;
+                    }
+#endif
                 }                
             }
             while ((!stop && (Card.Score(player1.ToArray()) <= 21)) && player1.Count < 5); // loverly logic (much better than it was)
 
             Console.Clear();
+
+#if DEBUG
+            if (Program.debugPlusPlus)
+            {
+                if (instaWin)
+                    return new GameReturnData(-1, 0);
+                if (instaLoose)
+                    return new GameReturnData(0, -1);
+            }
+#endif
 
             // player1 <= 21 && player2 <= player1
 
@@ -276,6 +308,9 @@ namespace Blackjack2022
         {
             if (score1 < 0)
                 return 1;
+
+            if (score2 < 0)
+                return 2;
 
             if (score1 > 21 && score2 > 21) // both over limit
                 return 0;
