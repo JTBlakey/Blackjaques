@@ -17,7 +17,18 @@ namespace Blackjack2022
 
             public bool[] playerWon;
 
-            public GameReturnData() { }
+            public GameReturnData(int players)
+            {
+                this.dealerScore = 0;
+
+                this.playerScores = new int[players];
+
+                playerWinConditions = new string?[players];
+
+                dealerWon = false;
+
+                playerWon = new bool[players];
+            }
 
             public GameReturnData(int dealerScore, int[] playerScores)
             {
@@ -36,15 +47,21 @@ namespace Blackjack2022
                     playerWon[i - 1] = win[i];
             }
 
-            public GameReturnData(int p1Score, int p2Score, string? p1WinCondition, string? p2WinCondition)
+            public GameReturnData(int dealerScore, int[] playerScores, string? dealerWinCondition, string?[] playerWinConditions)
             {
-                this.p1Score = p1Score;
-                this.p2Score = p2Score;
+                this.dealerScore = dealerScore;
+                this.playerScores = playerScores;
 
-                this.p1WinCondition = p1WinCondition;
-                this.p2WinCondition = p2WinCondition;
+                this.dealerWinCondition = dealerWinCondition;
 
-                p1Won = (GetWinner(p1Score, p2Score) != 2);
+                this.playerWinConditions = playerWinConditions;
+
+                bool[] win = GetWinner(dealerScore, playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
             }
 
             public string DealerScoreString()
