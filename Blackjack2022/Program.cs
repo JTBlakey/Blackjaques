@@ -14,7 +14,9 @@ class Program
     public static Player? player = new Player();
     public static Stats? stats = new Stats();
 
+#if DEBUG
     public static bool debugPlusPlus = false;
+#endif
 
     //Main program
     static void Main(string[] args)
