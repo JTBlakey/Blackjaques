@@ -17,7 +17,7 @@ namespace Blackjack2022
 
             public bool[] playerWon;
 
-            public GameReturnData(int players)
+            public GameReturnData(int players = 1)
             {
                 this.dealerScore = 0;
 
@@ -30,13 +30,44 @@ namespace Blackjack2022
                 playerWon = new bool[players];
             }
 
+            public GameReturnData(int dealerScore, int playerScore)
+            {
+                this.dealerScore = dealerScore;
+                this.playerScores = new int[] { playerScore };
+
+                this.dealerWinCondition = null;
+                this.playerWinConditions = new string?[] { null };
+
+                bool[] win = GetWinner(dealerScore, this.playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
+            }
+
+            public GameReturnData(int dealerScore, int playerScore, string? dealerWinCondition = null, string? playerWinCondition = null)
+            {
+                this.dealerScore = dealerScore;
+                this.playerScores = new int[] { playerScore };
+
+                this.dealerWinCondition = dealerWinCondition;
+                this.playerWinConditions = new string?[] { playerWinCondition };
+
+                bool[] win = GetWinner(dealerScore, playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
+            }
+
             public GameReturnData(int dealerScore, int[] playerScores)
             {
                 this.dealerScore = dealerScore;
                 this.playerScores = playerScores;
 
                 this.dealerWinCondition = null;
-
                 this.playerWinConditions = new string?[playerScores.Length];
 
                 bool[] win = GetWinner(dealerScore, playerScores);
@@ -113,7 +144,7 @@ namespace Blackjack2022
 
                 Console.Clear();
 
-                Console.WriteLine("COM:" + ((Program.debugPlusPlus) ? Card.Score(player2.ToArray()).ToString() : ""));
+                Console.WriteLine("COM:" + ((Program.debugPlusPlus) ? Card.Score(player2.ToArray(), true).ToString() : ""));
                 OutputCardArray(player2.ToArray(), (uint)((Program.debugPlusPlus) ? 2 : 1));
                 Console.WriteLine("YOU:" + ((Program.debugPlusPlus) ? Card.Score(player1.ToArray()).ToString() : ""));
                 OutputCardArray(player1.ToArray());
@@ -181,7 +212,7 @@ namespace Blackjack2022
 
                         Console.WriteLine("dealer dealing cards to dealer");
                         OutputCardArray(player2.ToArray());
-                        Console.WriteLine(Card.Score(player2.ToArray()).ToString());
+                        Console.WriteLine(Card.Score(player2.ToArray()).ToString(), true);
                         OutputCardArray(deck.ToArray());
 
                         Console.ReadLine();
@@ -196,9 +227,9 @@ namespace Blackjack2022
             OutputCardArray(player1.ToArray());
 
             if (Card.Score(player1.ToArray()) > 0)
-                return new GameReturnData(Card.Score(player1.ToArray()), Card.Score(player2.ToArray(), true));
+                return new GameReturnData(Card.Score(player2.ToArray(), true), Card.Score(player1.ToArray()));
             else
-                return new GameReturnData(Card.Score(player1.ToArray()), Card.Score(player2.ToArray(), true), "5 card rule", null);
+                return new GameReturnData(Card.Score(player2.ToArray(), true), Card.Score(player1.ToArray()), null, "5 card rule");
         }
 
         public static void OutputCardArray(Card[] chards, uint show = 0)
@@ -256,18 +287,18 @@ namespace Blackjack2022
                 }
 
                 GameReturnData gs = Game();
-                score += gs.p1Won ? 1 : 0;
+                score += gs.playerWon[0] ? 1 : 0;
 
-                if (money == 0 && gs.p1Won)
+                if (money == 0 && gs.playerWon[0])
                 {
                     Program.stats.moneyMade++;
 
                     money++;
                 }
 
-                money += (gs.p1Won) ? bet : -bet;
+                money += (gs.playerWon[0]) ? bet : -bet;
 
-                if (gs.p1Won)
+                if (gs.playerWon[0])
                 {
                     Program.stats.moneyMade += bet;
                     Program.stats.totalWin++;
@@ -283,10 +314,10 @@ namespace Blackjack2022
                 Console.Clear();
 
                 Console.WriteLine();
-                Console.WriteLine((!gs.dealerWon) ? "you won!" : "you lost :(");
+                Console.WriteLine((gs.playerWon[0]) ? "you won!" : "you lost :(");
                 Console.WriteLine();
-                Console.WriteLine("the dealers cards where worth: " + gs.P2ScoreString());
-                Console.WriteLine("your cards where worth: " + gs.P1ScoreString());
+                Console.WriteLine("the dealers cards where worth: " + gs.DealerScoreString());
+                Console.WriteLine("your cards where worth: " + gs.PlayerWinString(0));
                 Console.WriteLine();
                 Console.WriteLine("Score: " + score.ToString());
                 Console.WriteLine("Balance: $" + money.ToString());
