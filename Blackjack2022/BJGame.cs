@@ -28,7 +28,12 @@ namespace Blackjack2022
 
                 this.playerWinConditions = new string?[playerScores.Length];
 
-                p1Won = (GetWinner(p1Score, p2Score) != 2);
+                bool[] win = GetWinner(dealerScore, playerScores);
+                dealerWon = win[0];
+                playerWon = new bool[playerScores.Length];
+
+                for (int i = 1; i < win.Length; i++)
+                    playerWon[i - 1] = win[i];
             }
 
             public GameReturnData(int p1Score, int p2Score, string? p1WinCondition, string? p2WinCondition)
@@ -42,20 +47,22 @@ namespace Blackjack2022
                 p1Won = (GetWinner(p1Score, p2Score) != 2);
             }
 
-            public string P1ScoreString()
+            public string DealerScoreString()
             {
-                if (p1WinCondition == null)
-                    return p1Score.ToString();
+                if (this.dealerWinCondition == null)
+                    return this.dealerScore.ToString();
 
-                return p1WinCondition;
+                return this.dealerWinCondition;
             }
 
-            public string P2ScoreString()
+            public string PlayerWinString(int player)
             {
-                if (p2WinCondition == null)
-                    return p2Score.ToString();
+                if (this.playerWinConditions[player] == null)
+                    return this.playerScores[player].ToString();
 
-                return p2WinCondition;
+#pragma warning disable CS8603 // Possible null reference return. -- imposible - checked above (unless ram is fucked with)
+                return this.playerWinConditions[player];
+#pragma warning restore CS8603 // Possible null reference return.
             }
         }
 
@@ -259,7 +266,7 @@ namespace Blackjack2022
                 Console.Clear();
 
                 Console.WriteLine();
-                Console.WriteLine(gs.p1Won ? "you won!" : "you lost :(");
+                Console.WriteLine((!gs.dealerWon) ? "you won!" : "you lost :(");
                 Console.WriteLine();
                 Console.WriteLine("the dealers cards where worth: " + gs.P2ScoreString());
                 Console.WriteLine("your cards where worth: " + gs.P1ScoreString());
@@ -297,9 +304,9 @@ namespace Blackjack2022
 
             bool dealerHighest = true;
 
-            for (int i = 1; i < playerScores.Length; i++)
+            for (int i = 0; i < playerScores.Length; i++)
             {
-                if (playerScores[0] <= playerScores[i])
+                if (dealerScore <= playerScores[i])
                     dealerHighest = false;
             }
 
@@ -312,13 +319,13 @@ namespace Blackjack2022
 
             int highestScore = 0;
 
-            for (int i = 1; i < playerScores.Length; i++)
+            for (int i = 0; i < playerScores.Length; i++)
             {
                 if (playerScores[i] > highestScore)
                     highestScore = playerScores[i];
             }
 
-            for (int i = 1; i < playerScores.Length; i++)
+            for (int i = 0; i < playerScores.Length; i++)
             {
                 if (playerScores[i] == highestScore)
                     scores[i] = true;
