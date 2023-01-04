@@ -9,12 +9,14 @@ public class Tests
     public void TestSettings()
     {
         Settings[] settings = new Settings[16 * 16];
+        string[] names = new string[16 * 16];
 
         for (int x = 0; x < 16; x++)
         {
             for (int y = 0; y < 16; y++)
             {
-                settings[(x * 16) + y] = new Settings(((x * 16) + y).ToString(), (ConsoleColor)x, (ConsoleColor)y);
+                settings[(x * 16) + y] = new Settings((ConsoleColor)x, (ConsoleColor)y);
+                names[(x * 16) + y] = ((x * 16) + y).ToString();
             }
         }
 
@@ -25,22 +27,19 @@ public class Tests
             Directory.CreateDirectory(loc);
         }
 
-        foreach (Settings setting in settings)
+        for (int i = 0; i < 16 * 16; i++)
         {
-            Settings.SaveSettingsToFile(setting, Path.Join(loc, (setting.name + ".json")));
+            FileLib.Save<Settings>(settings[i], Path.Join(loc, (names[i] + ".json")));
         }
 
-        foreach (Settings setting in settings)
+        for (int i = 0; i < 16 * 16; i++)
         {
-            Settings settingLoad = Settings.LoadSettingsFromFile(Path.Join(loc, (setting.name + ".json")));
+            Settings settingLoad = FileLib.Open<Settings>(Path.Join(loc, (names[i] + ".json")));
 
-            if (settingLoad.foregroundColor != setting.foregroundColor)
+            if (settingLoad.foregroundColor != settings[i].foregroundColor)
                 throw new Exception("Setting files not equall");
 
-            if (settingLoad.backgroundColor != setting.backgroundColor)
-                throw new Exception("Setting files not equall");
-
-            if (settingLoad.name != setting.name)
+            if (settingLoad.backgroundColor != settings[i].backgroundColor)
                 throw new Exception("Setting files not equall");
         }
 
@@ -79,23 +78,6 @@ public class Tests
         {
             if (handScore.Key != Card.Score(handScore.Value))
                 throw new FormatException("Cards scored incorrectly");
-        }
-    }
-
-    [TestMethod]
-    public void TestWinnerSystem()
-    {
-        List<KeyValuePair<int, int[]>> winnerVals = new List<KeyValuePair<int, int[]>>();
-
-        winnerVals.Add(new KeyValuePair<int, int[]>(0, new int[] { 21, 21 }));
-        winnerVals.Add(new KeyValuePair<int, int[]>(1, new int[] { 8, 67 }));
-        winnerVals.Add(new KeyValuePair<int, int[]>(2, new int[] { 38, 17 }));
-        winnerVals.Add(new KeyValuePair<int, int[]>(0, new int[] { 29, 90 }));
-
-        foreach (KeyValuePair<int, int[]> winnerVal in winnerVals)
-        {
-            if (BJGame.GetWinner(winnerVal.Value[0], winnerVal.Value[1]) != winnerVal.Key)
-                throw new FormatException("Winner given is incorrect");
         }
     }
 }

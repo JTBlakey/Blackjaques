@@ -7,21 +7,18 @@ namespace Blackjack2022
         public ConsoleColor foregroundColor { get; set; }
         public ConsoleColor backgroundColor { get; set; }
 
-        public string name { get; set; }
+        public long money { get; set; }
 
         public Settings()
         {
-            name = "Username";
+            money = 10;
 
             foregroundColor = ConsoleColor.White;
             backgroundColor = ConsoleColor.Black;
         }
 
-        public Settings(string sName, ConsoleColor foreground, ConsoleColor background)
-        {
-            name = sName;
-
-            try
+        public Settings(ConsoleColor foreground, ConsoleColor background)
+        {try
             {
                 foregroundColor = foreground;
                 backgroundColor = background;
