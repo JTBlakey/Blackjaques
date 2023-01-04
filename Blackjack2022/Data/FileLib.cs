@@ -2,7 +2,7 @@
 
 namespace Blackjack2022
 {
-    internal class FileLib
+    public class FileLib
     {
         public const string OLD_SETTINGS_FILE_LOCATION = "SETTINGS/settings.json"; // old depricated location - will be removed in future update
 
