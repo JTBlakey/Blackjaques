@@ -4,7 +4,58 @@ namespace Blackjack2022
 {
     public class BJGame
     {
-        public static int[] Game()
+        public class GameReturnData
+        {
+            public int p1Score;
+            public int p2Score;
+
+            public string? p1WinCondition;
+            public string? p2WinCondition;
+
+            public bool p1Won;
+
+            public GameReturnData() { }
+
+            public GameReturnData(int p1Score, int p2Score)
+            {
+                this.p1Score = p1Score;
+                this.p2Score = p2Score;
+
+                this.p1WinCondition = null;
+                this.p2WinCondition = null;
+
+                p1Won = (GetWinner(p1Score, p2Score) != 2);
+            }
+
+            public GameReturnData(int p1Score, int p2Score, string? p1WinCondition, string? p2WinCondition)
+            {
+                this.p1Score = p1Score;
+                this.p2Score = p2Score;
+
+                this.p1WinCondition = p1WinCondition;
+                this.p2WinCondition = p2WinCondition;
+
+                p1Won = (GetWinner(p1Score, p2Score) != 2);
+            }
+
+            public string P1ScoreString()
+            {
+                if (p1WinCondition == null)
+                    return p1Score.ToString();
+
+                return p1WinCondition;
+            }
+
+            public string P2ScoreString()
+            {
+                if (p2WinCondition == null)
+                    return p2Score.ToString();
+
+                return p2WinCondition;
+            }
+        }
+
+        public static GameReturnData Game()
         {
             List<Card> deck = Card.Deck().ToList<Card>();
 
@@ -75,16 +126,19 @@ namespace Blackjack2022
                     }
                 }                
             }
-            while (!stop && (Card.Score(player1.ToArray()) <= 21)); // loverly logic (much better than it was)
+            while ((!stop && (Card.Score(player1.ToArray()) <= 21)) && player1.Count < 5); // loverly logic (much better than it was)
 
             Console.Clear();
 
             // player1 <= 21, player2 <= player1
 
-            while (Card.Score(player1.ToArray()) <= 21 && (Card.Score(player2.ToArray()) <= Card.Score(player1.ToArray()))) // even better logic
+            if (Card.Score(player1.ToArray()) > 0)
             {
-                player2.Add(deck[0]);
-                deck.RemoveAt(0);
+                while (Card.Score(player1.ToArray()) <= 21 && (Card.Score(player2.ToArray(), true) <= Card.Score(player1.ToArray()))) // even better logic
+                {
+                    player2.Add(deck[0]);
+                    deck.RemoveAt(0);
+                }
             }
 
             Console.WriteLine("COM:");
@@ -92,12 +146,10 @@ namespace Blackjack2022
             Console.WriteLine("YOU:");
             OutputCardArray(player1.ToArray());
 
-            int score = GetWinner(Card.Score(player1.ToArray()), Card.Score(player2.ToArray()));
-
-            if (score == 0) // draw = dealer win
-                score = 2;
-
-            return new int[] { score, Card.Score(player1.ToArray()), Card.Score(player2.ToArray()) };
+            if (Card.Score(player1.ToArray()) > 0)
+                return new GameReturnData(Card.Score(player1.ToArray()), Card.Score(player2.ToArray(), true));
+            else
+                return new GameReturnData(Card.Score(player1.ToArray()), Card.Score(player2.ToArray(), true), "5 card rule", null);
         }
 
         public static void OutputCardArray(Card[] chards, uint show = 0)
@@ -131,14 +183,14 @@ namespace Blackjack2022
 
             while (true)
             {
-                int[] gs = Game();
-                score += gs[0];
+                GameReturnData gs = Game();
+                score += gs.p1Won ? 1 : 0;
 
                 Console.WriteLine();
-                Console.WriteLine(gs[0] == 1 ? "you won!" : "you lost :(");
+                Console.WriteLine(gs.p1Won ? "you won!" : "you lost :(");
                 Console.WriteLine();
-                Console.WriteLine("the dealers cards where worth: " + gs[2].ToString());
-                Console.WriteLine("your cards where worth: " + gs[1].ToString());
+                Console.WriteLine("the dealers cards where worth: " + gs.P2ScoreString());
+                Console.WriteLine("your cards where worth: " + gs.P1ScoreString());
                 Console.WriteLine();
                 Console.WriteLine("Score: " + score.ToString());
 
@@ -153,6 +205,9 @@ namespace Blackjack2022
 
         public static int GetWinner(int score1, int score2) // 0 - noone, 1 - score1, 2 - score2
         {
+            if (score1 < 0)
+                return 1;
+
             if (score1 > 21 && score2 > 21) // both over limit
                 return 0;
 

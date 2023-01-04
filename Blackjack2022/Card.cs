@@ -77,10 +77,13 @@
             return deck;
         }
 
-        public static int Score(Card[] chards)
+        public static int Score(Card[] chards, bool isDealer = false)
         {
             int acesOHYEAH = 0;
             int score = 0;
+
+            if (chards.Length == 5 && !isDealer)
+                return -1;
 
             for (int i = 0; i < chards.Length; i++)
             {
