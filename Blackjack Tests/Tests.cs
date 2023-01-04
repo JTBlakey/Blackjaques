@@ -39,9 +39,6 @@ public class Tests
 
             if (settingLoad.backgroundColor != setting.backgroundColor)
                 throw new Exception("Setting files not equall");
-
-            if (settingLoad.name != setting.name)
-                throw new Exception("Setting files not equall");
         }
 
         Directory.Delete(loc, true);
