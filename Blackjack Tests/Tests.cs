@@ -91,7 +91,7 @@ public class Tests
 
         foreach (KeyValuePair<int, int[]> winnerVal in winnerVals)
         {
-            if (BJGame.GetWinner(winnerVal.Value[0], winnerVal.Value[1]) != winnerVal.Key)
+            if (BJGame.GetWinner(winnerVal.Value[0], new int[] {winnerVal.Value[1]}) != winnerVal.Key)
                 throw new FormatException("Winner given is incorrect");
         }
     }
