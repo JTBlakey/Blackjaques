@@ -29,4 +29,14 @@
   <ItemGroup>
     <Folder Include="Data\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Network" Version="6.2.5.23" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IPFormat">
+      <HintPath>Lib\IPFormat.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
