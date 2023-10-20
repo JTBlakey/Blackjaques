@@ -5,6 +5,7 @@
 | Kernel | OS      | Support |
 |--------|---------|---------|
 | Linux  | Ubuntu  | Full    |
+|        | Arch    | Full    |
 | Darwin | macOS   | Full    |
 | NT     | Windows | Full    |
 
