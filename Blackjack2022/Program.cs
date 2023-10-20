@@ -21,13 +21,15 @@ class Program
     //Main program
     static void Main(string[] args)
     {
-        #if DEBUG
+#if DEBUG
         foreach (string arg in args)
             if (arg.ToUpper() == "DEBUG++")
                 debugPlusPlus = true;
-        #endif
+#endif
 
         Console.OutputEncoding = Encoding.UTF8; // allow emojis
+
+        // config data files
 
         if (!Directory.Exists("./DATA"))
         {
@@ -45,6 +47,8 @@ class Program
                 Directory.Delete("./SETTINGS");
             }
         }
+
+        // end file config
 
         settings = FileLib.Open<Settings>(FileLib.SETTINGS_FILE_LOCATION);
         player = FileLib.Open<Player>(FileLib.PLAYER_FILE_LOCATION);
@@ -288,6 +292,7 @@ class Program
     // mfs the type to say ROFL out loud
     // mfs write comments instead of coding lmao
     // mfs who say LMAO out loud "luh-maohw"
+    // mfs who do project work instead of working on the *bEaUtY*
 
     // OH NO, WHERE DID THE CODE GO
     // where did the code go?

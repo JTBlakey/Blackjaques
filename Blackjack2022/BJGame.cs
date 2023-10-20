@@ -1,9 +1,12 @@
 ﻿// DO NOT TOUCH THIS FILE
 
+// i apologise, this file is 300 lines too long, but it does kinda work
+
 namespace Blackjack2022
 {
     public class BJGame
     {
+        // contains a lot of data about the state of the game - who won, who didnt, etc
         public class GameReturnData
         {
             public int dealerScore;
@@ -118,16 +121,14 @@ namespace Blackjack2022
         {
             List<Card> deck = Card.Deck().ToList<Card>();
 
-            Random rng = new Random();
-
-            for (int i = 0; i < rng.Next(40, 99); i++) { rng.Next(); } // randomize the random
+            Random rng = new Random((int)((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds());
 
             deck = deck.OrderBy(x => rng.Next()).ToList<Card>(); // shuffle
 
             List<Card> player1 = new List<Card>();
             List<Card> player2 = new List<Card>();
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 2; i++) // deal cards
             {
                 player1.Add(deck[0]);
                 deck.RemoveAt(0);
@@ -214,7 +215,14 @@ namespace Blackjack2022
 #endif
                 }                
             }
-            while ((!stop && (Card.Score(player1.ToArray()) <= 21)) && player1.Count < 5); // loverly logic (much better than it was)
+            while
+            (
+                (
+                    !stop &&
+                    (Card.Score(player1.ToArray()) <= 21)
+                ) &&
+                player1.Count <= 8
+            ); // loverly logic (much better than it was)
 
             Console.Clear();
 
@@ -363,7 +371,7 @@ namespace Blackjack2022
             }
         }
 
-        public static bool[] GetWinner(int dealerScore, int[] playerScores) // 0 - dealer, 1, ∞ - playerScores + 1
+        public static bool[] GetWinner(int dealerScore, int[] playerScores) // 0 - dealer, 1... - playerScores + 1
         {
             bool[] scores = new bool[playerScores.Length + 1];
 
@@ -384,12 +392,19 @@ namespace Blackjack2022
 
             bool dealerHighest = true;
 
-            for (int i = 0; i < playerScores.Length; i++)
+            if (dealerScore <= 21)
             {
-                if (dealerScore <= playerScores[i])
-                    dealerHighest = false;
+                for (int i = 0; i < playerScores.Length; i++)
+                {
+                    if (dealerScore <= playerScores[i])
+                        dealerHighest = false;
+                }
             }
-
+            else
+            {
+                dealerHighest = false;
+            }
+            
             if (dealerHighest)
             {
                 scores[0] = true;
