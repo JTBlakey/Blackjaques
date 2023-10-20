@@ -371,7 +371,7 @@ namespace Blackjack2022
             }
         }
 
-        public static bool[] GetWinner(int dealerScore, int[] playerScores) // 0 - dealer, 1, ∞ - playerScores + 1
+        public static bool[] GetWinner(int dealerScore, int[] playerScores) // 0 - dealer, 1... - playerScores + 1
         {
             bool[] scores = new bool[playerScores.Length + 1];
 
@@ -392,12 +392,19 @@ namespace Blackjack2022
 
             bool dealerHighest = true;
 
-            for (int i = 0; i < playerScores.Length; i++)
+            if (dealerScore <= 21)
             {
-                if (dealerScore <= playerScores[i])
-                    dealerHighest = false;
+                for (int i = 0; i < playerScores.Length; i++)
+                {
+                    if (dealerScore <= playerScores[i])
+                        dealerHighest = false;
+                }
             }
-
+            else
+            {
+                dealerHighest = false;
+            }
+            
             if (dealerHighest)
             {
                 scores[0] = true;
