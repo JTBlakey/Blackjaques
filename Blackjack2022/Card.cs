@@ -82,7 +82,7 @@
             int acesOHYEAH = 0;
             int score = 0;
 
-            if (chards.Length == 5 && !isDealer)
+            if (chards.Length > 8 && !isDealer)
                 return -1;
 
             for (int i = 0; i < chards.Length; i++)
